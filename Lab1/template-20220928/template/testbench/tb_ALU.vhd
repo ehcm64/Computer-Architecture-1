@@ -75,9 +75,9 @@ begin
                             -- sub
                             when "001" => expected := std_logic_vector(signed(a) - signed(b));
                             -- comparator
-                            when "011" => expected := "00000000000000000000000000000000";
+                            when "011" =>
                                 ---------------------------------------MODIFY HERE-------------------------------------------------------------
-                                ASSERT FALSE
+                                ASSERT (a > b)
                                 REPORT "Replace this ASSERT with the code to test the comparator"
                                 SEVERITY ERROR;
                             ---------------------------------------END MODIFY--------------------------------------------------------------
