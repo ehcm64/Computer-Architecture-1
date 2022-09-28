@@ -1,0 +1,329 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Template/modelsim
+Eadd_sub
+Z0 w1664353815
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 dC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/modelsim
+Z5 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/add_sub.vhd
+Z6 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/add_sub.vhd
+l0
+L5
+V207_zj^V^3XmVFBkYPT0^3
+!s100 Ho^oT``GLJUNf<W@=D9Un1
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1664356576
+!i10b 1
+Z9 !s108 1664356576.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/add_sub.vhd|
+Z11 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/add_sub.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Asynth
+R1
+R2
+R3
+DEx4 work 7 add_sub 0 22 207_zj^V^3XmVFBkYPT0^3
+l22
+L16
+Va`C3KNfi@agcXaUW184lF2
+!s100 W=FFe1zNXFjZn_cmn_zA?3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Ealu
+Z14 w1664346904
+R2
+R3
+R4
+Z15 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/ALU.vhd
+Z16 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/ALU.vhd
+l0
+L24
+VLIV0?b]kCZ40<iPbTC=4:2
+!s100 O`l`Xc5c_V9`dzon<W_fQ2
+R7
+32
+R8
+!i10b 1
+R9
+Z17 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/ALU.vhd|
+Z18 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/ALU.vhd|
+!i113 1
+R12
+R13
+Abdf_type
+R2
+R3
+Z19 DEx4 work 3 alu 0 22 LIV0?b]kCZ40<iPbTC=4:2
+l91
+L34
+Vn7Jhlm<g3=Igo4gAY0?Z=3
+!s100 ao^@A8=RSg[FW?jY:[EXI0
+R7
+32
+R8
+!i10b 1
+R9
+R17
+R18
+!i113 1
+R12
+R13
+Ecomparator
+R14
+R2
+R3
+R4
+Z20 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/comparator.vhd
+Z21 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/comparator.vhd
+l0
+L4
+V3WXakLjKGIMC9fTC_zAJG3
+!s100 XTWoF>RX1>LcmLLBBo;N:0
+R7
+32
+R8
+!i10b 1
+R9
+Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/comparator.vhd|
+Z23 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/comparator.vhd|
+!i113 1
+R12
+R13
+Asynth
+R2
+R3
+DEx4 work 10 comparator 0 22 3WXakLjKGIMC9fTC_zAJG3
+l17
+L16
+V4H[>NIZHB;1056V@R2LH31
+!s100 W_^:E1=WQ7kN:@Y9W>e1W2
+R7
+32
+R8
+!i10b 1
+R9
+R22
+R23
+!i113 1
+R12
+R13
+Elogic_unit
+Z24 w1664349603
+R2
+R3
+R4
+Z25 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/logic_unit.vhd
+Z26 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/logic_unit.vhd
+l0
+L4
+VfUEL39DQfcR_XLk:Hoe<f3
+!s100 UJioXKUg8XUULGTSe2WE20
+R7
+32
+R8
+!i10b 1
+R9
+Z27 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/logic_unit.vhd|
+Z28 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/logic_unit.vhd|
+!i113 1
+R12
+R13
+Asynth
+R2
+R3
+DEx4 work 10 logic_unit 0 22 fUEL39DQfcR_XLk:Hoe<f3
+l14
+L13
+V9@Ak6zDRAgZPO9V69>BbC3
+!s100 >h]>H[:Z4<jYc8GLe=ioc1
+R7
+32
+R8
+!i10b 1
+R9
+R27
+R28
+!i113 1
+R12
+R13
+Emultiplexer
+Z29 w1664353502
+R2
+R3
+R4
+Z30 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/multiplexer.vhd
+Z31 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/multiplexer.vhd
+l0
+L4
+V4iH6`nZgBAHVia??bJk>G2
+!s100 UDM^5ga=kb9Z[=K^]bghV0
+R7
+32
+R8
+!i10b 1
+R9
+Z32 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/multiplexer.vhd|
+Z33 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/multiplexer.vhd|
+!i113 1
+R12
+R13
+Asynth
+R2
+R3
+DEx4 work 11 multiplexer 0 22 4iH6`nZgBAHVia??bJk>G2
+l16
+L15
+VCMog59QzXc^NYN4aLfjc43
+!s100 d;Vi_E]RGBJFj6@Soj<:20
+R7
+32
+R8
+!i10b 1
+R9
+R32
+R33
+!i113 1
+R12
+R13
+Eshift_unit
+R14
+R1
+R2
+R3
+R4
+Z34 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/shift_unit.vhd
+Z35 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/shift_unit.vhd
+l0
+L5
+VoYz=ZP:Rg2U9Eb=ZGo>940
+!s100 C4@E7NN0:UB89P^MW405S0
+R7
+32
+Z36 !s110 1664356577
+!i10b 1
+R9
+Z37 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/shift_unit.vhd|
+Z38 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/vhdl/shift_unit.vhd|
+!i113 1
+R12
+R13
+Asynth
+R1
+R2
+R3
+DEx4 work 10 shift_unit 0 22 oYz=ZP:Rg2U9Eb=ZGo>940
+l15
+L14
+V@nFV=K3:Z_d6IjB;3@zU;3
+!s100 [321mfnCdb31EL<HVmGPL3
+R7
+32
+R36
+!i10b 1
+R9
+R37
+R38
+!i113 1
+R12
+R13
+Etb_alu
+Z39 w1664353003
+R1
+R2
+R3
+R4
+Z40 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_ALU.vhd
+Z41 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_ALU.vhd
+l0
+L5
+VPC4a2j0Z@h07SO>N@?M3X3
+!s100 h4gR^9UUSFUJBW2hl@TTO2
+R7
+32
+R36
+!i10b 1
+Z42 !s108 1664356577.000000
+Z43 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_ALU.vhd|
+Z44 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_ALU.vhd|
+!i113 1
+R12
+R13
+Abench
+R19
+R1
+R2
+R3
+DEx4 work 6 tb_alu 0 22 PC4a2j0Z@h07SO>N@?M3X3
+l12
+L8
+V_3E]TTL;;gJ:G9713`fl32
+!s100 ;>z`GOHiKJ4S:59VCj@h53
+R7
+32
+R36
+!i10b 1
+R42
+R43
+R44
+!i113 1
+R12
+R13
+Etb_logic_unit
+Z45 w1664348674
+R2
+R3
+R4
+Z46 8C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_logic_unit.vhd
+Z47 FC:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_logic_unit.vhd
+l0
+L4
+V56]=9U8E_0^hnOWE8_kak0
+!s100 I0S6Z^F^OTJKf4O?Ic>222
+R7
+32
+R36
+!i10b 1
+R42
+Z48 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_logic_unit.vhd|
+Z49 !s107 C:/Users/micro/Documents/Computer-Architecture-1/Lab1/template-20220928/template/testbench/tb_logic_unit.vhd|
+!i113 1
+R12
+R13
+Atestbench
+R2
+R3
+Z50 DEx4 work 13 tb_logic_unit 0 22 56]=9U8E_0^hnOWE8_kak0
+l21
+L7
+Z51 VLeR_AEZfUL^6WTeAOo5U72
+Z52 !s100 PJ_]d9AnE45e;gza]RG`O1
+R7
+32
+R36
+!i10b 1
+R42
+R48
+R49
+!i113 1
+R12
+R13
