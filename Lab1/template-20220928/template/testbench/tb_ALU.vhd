@@ -77,9 +77,6 @@ begin
                             -- comparator
                             when "011" =>
                                 ---------------------------------------MODIFY HERE-------------------------------------------------------------
-                                ASSERT (a > b);
-                                ASSERT (b < a);
-                                ASSERT (b = a);
                                 REPORT "Replace this ASSERT with the code to test the comparator"
                                 SEVERITY ERROR;
                             ---------------------------------------END MODIFY--------------------------------------------------------------
