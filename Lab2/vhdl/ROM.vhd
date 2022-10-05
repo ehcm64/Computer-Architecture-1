@@ -12,5 +12,27 @@ entity ROM is
 end ROM;
 
 architecture synth of ROM is
+    signal s_address    : std_logic_vector(9 downto 0);
+    signal s_cs, s_read : std_logic;
 begin
+    p_buff : process(clk, address, cs, read) is
+    begin
+        if (rising_edge(clk)) then
+            s_address <= address;
+            s_cs      <= cs;
+            s_read    <= read;
+        end if;
+    end process p_buff;
+
+    write_read : process(clk, s_cs, s_address, s_read) is
+    begin
+        rddata <= (others => 'Z');
+        if (rising_edge(clk)) then
+            if (s_cs = '1') then
+                if (s_read = '1') then
+
+                end if;
+            end if;
+        end if;
+    end process write_read;
 end synth;

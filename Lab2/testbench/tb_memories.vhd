@@ -9,6 +9,7 @@ architecture testbench of tb_memories is
     constant CLK_PERIOD : time := 40 ns;
 
     signal clk            : std_logic := '0';
+    signal cs : std_logic;
     signal reset_n        : std_logic := '0';
     signal write, read    : std_logic := '0';
     signal address        : std_logic_vector(15 downto 0);
