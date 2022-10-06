@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
@@ -101,3 +102,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  
 -- Compiling architecture arch of rgb_led96
 
 } {} {}}
+=======
+
+>>>>>>> Stashed changes
