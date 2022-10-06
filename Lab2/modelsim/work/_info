@@ -1,0 +1,583 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/intelFPGA/18.1
+Econtroller
+Z0 w1664961348
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 dC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/modelsim
+Z5 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/Controller.vhd
+Z6 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/Controller.vhd
+l0
+L5
+VQNRdUR5N=bM4Yh<KB[Wah1
+!s100 EgmZX?@Hlj_:FT@1zk_WE3
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1665064212
+!i10b 1
+Z9 !s108 1665064211.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/Controller.vhd|
+Z11 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/Controller.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Asynth
+R1
+R2
+R3
+DEx4 work 10 controller 0 22 QNRdUR5N=bM4Yh<KB[Wah1
+l18
+L17
+VecYGEP=ze?5Men@=jVI<T1
+!s100 ma6P5AB>OVS>VVO5E:eiU0
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Edecoder
+Z14 w1665064140
+R1
+R2
+R3
+R4
+Z15 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/decoder.vhd
+Z16 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/decoder.vhd
+l0
+L5
+VU?AT>Z]mM@<^]6F2zNAK73
+!s100 E70XToNOKdM31o2OfPCQK3
+R7
+32
+R8
+!i10b 1
+Z17 !s108 1665064212.000000
+Z18 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/decoder.vhd|
+Z19 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/decoder.vhd|
+!i113 1
+R12
+R13
+Asynth
+R1
+R2
+R3
+DEx4 work 7 decoder 0 22 U?AT>Z]mM@<^]6F2zNAK73
+l15
+L14
+V`Fh<5@IMiT2Bm0VdaJIDJ1
+!s100 ^Bl37T^8kERcVoEcoj1Y>1
+R7
+32
+R8
+!i10b 1
+R17
+R18
+R19
+!i113 1
+R12
+R13
+Efpga4u_with_controller
+R0
+R2
+R3
+R4
+Z20 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_with_controller.vhd
+Z21 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_with_controller.vhd
+l0
+L24
+V=:f=j`>OO=61_Q:WX;AeN1
+!s100 `1RbW94><6J]8CK?H<fzS3
+R7
+32
+R8
+!i10b 1
+R17
+Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_with_controller.vhd|
+Z23 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_with_controller.vhd|
+!i113 1
+R12
+R13
+Abdf_type
+R2
+R3
+Z24 DEx4 work 22 fpga4u_with_controller 0 22 =:f=j`>OO=61_Q:WX;AeN1
+l97
+L33
+V<iXS`zZaco0^BPS_`^KnA0
+!s100 RcJMHfGX2QE:aLibWNebS2
+R7
+32
+R8
+!i10b 1
+R17
+R22
+R23
+!i113 1
+R12
+R13
+Efpga4u_without_controller
+Z25 w1664970374
+R2
+R3
+R4
+Z26 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_without_controller.vhd
+Z27 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_without_controller.vhd
+l0
+L24
+VFCoiMT1ozEjHKS<L095c@1
+!s100 69dai>]IQUYlKDS^l9;He1
+R7
+32
+R8
+!i10b 1
+R17
+Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_without_controller.vhd|
+Z29 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/FPGA4U_without_controller.vhd|
+!i113 1
+R12
+R13
+Abdf_type
+R2
+R3
+Z30 DEx4 work 25 fpga4u_without_controller 0 22 FCoiMT1ozEjHKS<L095c@1
+l86
+L38
+V3eS^oHjd]:IN0nhaT]z9[0
+!s100 29N9S8[5?VkolAz4YIf:;2
+R7
+32
+R8
+!i10b 1
+R17
+R28
+R29
+!i113 1
+R12
+R13
+Eleds
+R0
+R1
+R2
+R3
+R4
+Z31 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd
+Z32 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd
+l0
+L5
+V82^IRfHNag^>;Yc>Z[nm>3
+!s100 LBhnQz<diU;5h1EbFfFEW1
+R7
+32
+R8
+!i10b 1
+R17
+Z33 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd|
+Z34 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/LEDs.vhd|
+!i113 1
+R12
+R13
+Asynth
+R1
+R2
+R3
+DEx4 work 4 leds 0 22 82^IRfHNag^>;Yc>Z[nm>3
+l34
+L22
+Vj;cD^kSPz:JHjlD@L]j;81
+!s100 ^Eb^?kG1CKeS`DJCfdSl82
+R7
+32
+R8
+!i10b 1
+R17
+R33
+R34
+!i113 1
+R12
+R13
+Ppack
+Z35 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z36 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R2
+R3
+R0
+R4
+Z37 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/rgb_led96.vhd
+Z38 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/rgb_led96.vhd
+l0
+L12
+VSgkf7C>zV<_V6E^@jUKD^3
+!s100 FB]U9M?hE8E5iehJ9[AWh3
+R7
+32
+b1
+Z39 !s110 1665064213
+!i10b 1
+Z40 !s108 1665064213.000000
+Z41 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/rgb_led96.vhd|
+Z42 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/rgb_led96.vhd|
+!i113 1
+R12
+R13
+Bbody
+Z43 DPx4 work 4 pack 0 22 Sgkf7C>zV<_V6E^@jUKD^3
+R35
+R36
+R2
+R3
+l0
+L17
+VQ[i6CQaWYOi37nk]<RCBH3
+!s100 8]CiCz8GM]b_8`cfK=T:`2
+R7
+32
+R39
+!i10b 1
+R40
+R41
+R42
+!i113 1
+R12
+R13
+Eram
+Z44 w1665063707
+R1
+R2
+R3
+R4
+Z45 8C:\Users\Timo\Desktop\Ecole\EPFL\ba3\computer_architecture\Computer-Architecture-1\Lab2\vhdl\RAM.vhd
+Z46 FC:\Users\Timo\Desktop\Ecole\EPFL\ba3\computer_architecture\Computer-Architecture-1\Lab2\vhdl\RAM.vhd
+l0
+L5
+VJiWAmLGUWmdVPB8L2QZ[D3
+!s100 9O>00CFElD4PLMkihiTWm3
+R7
+32
+R39
+!i10b 1
+R40
+Z47 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\Timo\Desktop\Ecole\EPFL\ba3\computer_architecture\Computer-Architecture-1\Lab2\vhdl\RAM.vhd|
+Z48 !s107 C:\Users\Timo\Desktop\Ecole\EPFL\ba3\computer_architecture\Computer-Architecture-1\Lab2\vhdl\RAM.vhd|
+!i113 1
+R12
+R13
+Asynth
+R1
+R2
+R3
+DEx4 work 3 ram 0 22 JiWAmLGUWmdVPB8L2QZ[D3
+l22
+L16
+VGiSzj>YzZmL2:BeoUE=Kz3
+!s100 Lm2BCK>5Io<PId8gc6SKG1
+R7
+32
+R39
+!i10b 1
+R40
+R47
+R48
+!i113 1
+R12
+R13
+Eregister_file
+R0
+R1
+R2
+R3
+R4
+Z49 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/register_file.vhd
+Z50 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/register_file.vhd
+l0
+L5
+VhQYRZ<6ijZW2:hk46k4IZ2
+!s100 _;mToXbZzY:WVO^oMIJ;J3
+R7
+32
+R39
+!i10b 1
+R40
+Z51 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/register_file.vhd|
+Z52 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/register_file.vhd|
+!i113 1
+R12
+R13
+Asynth
+R1
+R2
+R3
+DEx4 work 13 register_file 0 22 hQYRZ<6ijZW2:hk46k4IZ2
+l22
+L18
+VXlQQdLP[;:dn=AG03OjgI0
+!s100 VI9`EnAXTodA<E=kWbYMY0
+R7
+32
+R39
+!i10b 1
+R40
+R51
+R52
+!i113 1
+R12
+R13
+Ergb_led96
+R0
+R43
+R36
+R35
+R2
+R3
+R4
+R37
+R38
+l0
+L46
+VDn00^;b6BmV8c[7[]6<CU2
+!s100 X:YKB@hW0<LC:6C595LeJ0
+R7
+32
+R39
+!i10b 1
+R40
+R41
+R42
+!i113 1
+R12
+R13
+Aarch
+R43
+R36
+R35
+R2
+R3
+DEx4 work 9 rgb_led96 0 22 Dn00^;b6BmV8c[7[]6<CU2
+l144
+L80
+VVMLEXCQSI_@JdCBGa]SIz1
+!s100 g<aGZ1bIK0AWZCQOUK`ba3
+R7
+32
+R39
+!i10b 1
+R40
+R41
+R42
+!i113 1
+R12
+R13
+Erom
+Z53 w1664967152
+R2
+R3
+R4
+Z54 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM.vhd
+Z55 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM.vhd
+l0
+L4
+VLD>LKJh0<<KfR_G::f?6B1
+!s100 LzhnA0@bLeKPHkcXf<L3g3
+R7
+32
+Z56 !s110 1665064214
+!i10b 1
+Z57 !s108 1665064214.000000
+Z58 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM.vhd|
+Z59 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM.vhd|
+!i113 1
+R12
+R13
+Asynth
+R2
+R3
+DEx4 work 3 rom 0 22 LD>LKJh0<<KfR_G::f?6B1
+l26
+L14
+VQWR6fbHDba7zLe<b6gU@n2
+!s100 Bk6]jK[c_]3n1XaKFP0=B1
+R7
+32
+R56
+!i10b 1
+R57
+R58
+R59
+!i113 1
+R12
+R13
+Erom_block
+R0
+R2
+R3
+R4
+Z60 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM_Block.vhd
+Z61 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM_Block.vhd
+l0
+L42
+VCf[gZ]hQBZigaT1P:e9O01
+!s100 Fb1^C3b1G3KcM]0dFoPHV2
+R7
+32
+R56
+!i10b 1
+R57
+Z62 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM_Block.vhd|
+Z63 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/vhdl/ROM_Block.vhd|
+!i113 1
+R12
+R13
+Asyn
+R2
+R3
+DEx4 work 9 rom_block 0 22 Cf[gZ]hQBZigaT1P:e9O01
+l82
+L52
+VZKBR7P0EaE;PJMf_Ho4411
+!s100 2O9W8o5<`cI7Pb0TBCEoL0
+R7
+32
+R56
+!i10b 1
+R57
+R62
+R63
+!i113 1
+R12
+R13
+Etb_controller
+R0
+R2
+R3
+R4
+Z64 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_controller.vhd
+Z65 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_controller.vhd
+l0
+L4
+ViJgDF5RR:zbcJ5A_GfFbF0
+!s100 28F?L_OHdPH3gH3B4nzCd1
+R7
+32
+R56
+!i10b 1
+R57
+Z66 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_controller.vhd|
+Z67 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_controller.vhd|
+!i113 1
+R12
+R13
+Atestbench
+R24
+R2
+R3
+DEx4 work 13 tb_controller 0 22 iJgDF5RR:zbcJ5A_GfFbF0
+l13
+L7
+VPWiaV45Yf6[PVmi`KT2@T0
+!s100 WiZQfKkS[Zco`@HUXT1io0
+R7
+32
+R56
+!i10b 1
+R57
+R66
+R67
+!i113 1
+R12
+R13
+Etb_memories
+Z68 w1665063944
+R1
+R2
+R3
+R4
+Z69 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_memories.vhd
+Z70 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_memories.vhd
+l0
+L5
+V_[B`<1i^G3X9j`zn<9dcS1
+!s100 >eaMjaQUiFi7T3R9cd3^`0
+R7
+32
+Z71 !s110 1665064215
+!i10b 1
+R57
+Z72 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_memories.vhd|
+Z73 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_memories.vhd|
+!i113 1
+R12
+R13
+Atestbench
+R30
+R1
+R2
+R3
+DEx4 work 11 tb_memories 0 22 _[B`<1i^G3X9j`zn<9dcS1
+l19
+L8
+VHU:`e0JJVh96^59cS[6]<1
+!s100 Qec@BZNh5SP611?l>lh_T3
+R7
+32
+R71
+!i10b 1
+R57
+R72
+R73
+!i113 1
+R12
+R13
+Etb_register_file
+R0
+R1
+R2
+R3
+R4
+Z74 8C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_register_file.vhd
+Z75 FC:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_register_file.vhd
+l0
+L5
+V9dGOXn>gC30@lMD0]CZ;O3
+!s100 1`;gKjLez8z?IanM[D4a_3
+R7
+32
+R71
+!i10b 1
+Z76 !s108 1665064215.000000
+Z77 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_register_file.vhd|
+Z78 !s107 C:/Users/Timo/Desktop/Ecole/EPFL/ba3/computer_architecture/Computer-Architecture-1/Lab2/testbench/tb_register_file.vhd|
+!i113 1
+R12
+R13
+Abench
+R1
+R2
+R3
+Z79 DEx4 work 16 tb_register_file 0 22 9dGOXn>gC30@lMD0]CZ;O3
+l34
+L8
+Z80 VzOUba=LH5?UXie>Bb0;2o2
+Z81 !s100 C5ef0U>EH36?BiQc@fMON0
+R7
+32
+R71
+!i10b 1
+R76
+R77
+R78
+!i113 1
+R12
+R13
