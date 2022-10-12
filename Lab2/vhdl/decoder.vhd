@@ -13,7 +13,7 @@ end decoder;
 
 architecture synth of decoder is
 begin
-    cs_ROM <= '1' when ((0 <= unsigned(address)) and (unsigned(address) <= 4092)) else '0';
-    cs_RAM <= '1';
-    cs_LEDS <= '1' when ((8192 <= unsigned(address)) and (unsigned(address) <= 8204)) else '0';
+    cs_ROM <= '1' when ((x"0000" <= unsigned(address)) and (unsigned(address) <= x"0FFC")) else '0';
+    cs_RAM <= '1' when ((x"1000" <= unsigned(address)) and (unsigned(address) <= x"1FFC")) else '0';
+    cs_LEDS <= '1' when ((x"2000" <= unsigned(address)) and (unsigned(address) <= x"200C")) else '0';
 end synth;
