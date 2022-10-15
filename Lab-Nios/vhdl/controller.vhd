@@ -39,15 +39,14 @@ end controller;
 
 architecture synth of controller is
     type state is (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, I_OP, LOAD2);
-    signal s_current_state : state;
-    signal s_next_state    : state;
+    signal s_current_state, s_next_state : state;
+
 begin
     state_proc : process(clk, reset_n)
     begin
         if (reset_n = '0') then
             s_current_state <= FETCH1;
-        end if;
-        if (rising_edge(clk)) then
+        elsif (rising_edge(clk)) then
             s_current_state <= s_next_state;
         end if;
     end process state_proc;
@@ -55,21 +54,38 @@ begin
     op_alu_proc : process(op)
     begin
         case op is
-            when x"3A" =>
+            when "111010" =>
                 op_alu <= opx;
             when others =>
                 op_alu <= op;
         end case;
     end process op_alu_proc;
 
-    comb_proc : process(state)
+    comb_proc : process(s_current_state)
     begin
         s_next_state <= s_current_state;
         case s_current_state is
 
             when FETCH1 =>
 
-                read         <= '1';
+                read <= '1';
+
+                branch_op  <= '0';
+                imm_signed <= '0';
+                ir_en      <= '0';
+                pc_add_imm <= '0';
+                pc_en      <= '0';
+                pc_sel_a   <= '0';
+                pc_sel_imm <= '0';
+                rf_wren    <= '0';
+                sel_addr   <= '0';
+                sel_b      <= '0';
+                sel_mem    <= '0';
+                sel_pc     <= '0';
+                sel_ra     <= '0';
+                sel_rC     <= '0';
+                write      <= '0';
+
                 s_next_state <= FETCH2;
 
             when FETCH2 =>
@@ -79,13 +95,13 @@ begin
 
             when DECODE =>
 
-                if (op = x"3A" AND opx = x"34") then
+                if (op = "111010" AND opx = "110100") then
                     s_next_state <= BREAK;
-                elsif (op = x"17") then
+                elsif (op = "010111") then
                     s_next_state <= LOAD1;
-                elsif (op = x"15") then
+                elsif (op = "010101") then
                     s_next_state <= STORE;
-                elsif (op = x"3A") then
+                elsif (op = "111010") then
                     s_next_state <= R_OP;
                 else
                     s_next_state <= I_OP;
