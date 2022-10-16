@@ -38,7 +38,7 @@ entity controller is
 end controller;
 
 architecture synth of controller is
-    type state is (FETCH1, FETCH2, DECODE, R_OP, I_OP, STORE, BREAK, LOAD1, LOAD2);
+    type state is (FETCH1, FETCH2, DECODE, R_OP, I_OP, STORE, BREAK, LOAD1, LOAD2, BRANCH, CALL, CALLR, JMP, JMPI, UI_OP, RI_OP);
     signal s_current_state, s_next_state : state;
 
 begin
@@ -51,11 +51,10 @@ begin
         end if;
     end process state_proc;
 
-    op_alu_proc : process(op)
+    op_alu_proc : process(op, opx)
     begin
         case op is
             when "111010" =>
-
                 op_alu(2 downto 0) <= opx(5 downto 3);
                 case opx(3 downto 0) is
                     when x"6" =>
@@ -76,8 +75,13 @@ begin
 
             when "010111" =>
                 op_alu <= "000000";
+
             when "010101" =>
                 op_alu <= "000000";
+
+            when "000110" =>
+                op_alu <= "011100";
+
             when others =>
                 op_alu(2 downto 0) <= op(5 downto 3);
                 case op(3 downto 0) is
@@ -127,14 +131,28 @@ begin
             when DECODE =>
                 pc_en <= '0';
                 ir_en <= '0';
-                if (op = "111010" AND opx = "110100") then
+                if (op = "111010" and opx = "110100") then
                     s_next_state <= BREAK;
+                elsif (op = "111010" and (opx = "000101" or opx = "001101")) then
+                    s_next_state <= JMP;
+                elsif (op = "111010" and (opx(3 downto 0) = x"2" or opx(3 downto 0) = x"a")) then
+                    s_next_state <= RI_OP;
+                elsif (op = "111010" and opx = "011101") then
+                    s_next_state <= CALLR;
                 elsif (op = "010111") then
                     s_next_state <= LOAD1;
                 elsif (op = "010101") then
                     s_next_state <= STORE;
                 elsif (op = "111010") then
                     s_next_state <= R_OP;
+                elsif (op(3 downto 0) = x"6" or op(3 downto 0) = x"e") then
+                    s_next_state <= BRANCH;
+                elsif (op = "000000") then
+                    s_next_state <= CALL;
+                elsif (op = "000001") then
+                    s_next_state <= JMPI;
+                elsif (op = "001100" or op = "010100" or op = "011100" or op = "101000" or op = "110000") then
+                    s_next_state <= UI_OP;
                 else
                     s_next_state <= I_OP;
                 end if;
@@ -169,6 +187,49 @@ begin
             when LOAD2 =>
                 sel_mem      <= '1';
                 rf_wren      <= '1';
+                s_next_state <= FETCH1;
+
+            when BRANCH =>
+                branch_op    <= '1';
+                sel_b        <= '1';
+                pc_add_imm   <= '1';
+                s_next_state <= FETCH1;
+
+            when CALL =>
+                rf_wren      <= '1';
+                pc_en        <= '1';
+                pc_sel_imm   <= '1';
+                sel_pc       <= '1';
+                sel_ra       <= '1';
+                s_next_state <= FETCH1;
+
+            when CALLR =>
+                rf_wren      <= '1';
+                pc_en        <= '1';
+                pc_sel_a     <= '1';
+                sel_pc       <= '1';
+                sel_ra       <= '1';
+                s_next_state <= FETCH1;
+
+            when JMP =>
+                pc_en        <= '1';
+                pc_sel_a     <= '1';
+                s_next_state <= FETCH1;
+
+            when JMPI =>
+                pc_en        <= '1';
+                pc_sel_imm   <= '1';
+                s_next_state <= FETCH1;
+
+            when UI_OP =>
+                rf_wren      <= '1';
+                imm_signed   <= '0';
+                s_next_state <= FETCH1;
+
+            when RI_OP =>
+                rf_wren      <= '1';
+                sel_b        <= '0';
+                sel_rC       <= '0';
                 s_next_state <= FETCH1;
         end case;
 

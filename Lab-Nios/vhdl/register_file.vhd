@@ -20,9 +20,8 @@ architecture synth of register_file is
     signal reg : reg_type;
 
 begin
-    reg(0) <= "00000000000000000000000000000000";
-    a      <= "00000000000000000000000000000000" when to_integer(unsigned(aa)) = 0 else reg(to_integer(unsigned(aa)));
-    b      <= "00000000000000000000000000000000" when to_integer(unsigned(ab)) = 0 else reg(to_integer(unsigned(ab)));
+    a <= "00000000000000000000000000000000" when to_integer(unsigned(aa)) = 0 else reg(to_integer(unsigned(aa)));
+    b <= "00000000000000000000000000000000" when to_integer(unsigned(ab)) = 0 else reg(to_integer(unsigned(ab)));
 
     write : process(clk) is
     begin
