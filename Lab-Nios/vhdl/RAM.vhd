@@ -20,12 +20,11 @@ architecture synth of RAM is
     signal s_read    : std_logic;
 
 begin
-    p_buff : process(clk, address, cs, read, write) is
+    p_buff : process(clk) is
     begin
         if (rising_edge(clk)) then
             s_address <= address;
             s_read    <= cs and read;
-
         end if;
     end process p_buff;
 
@@ -36,7 +35,6 @@ begin
             rddata <= (others => '0');
             rddata <= reg(to_integer(unsigned(s_address)));
         end if;
-
     end process p_read;
 
     p_write : process(clk) is
@@ -47,21 +45,4 @@ begin
             end if;
         end if;
     end process p_write;
-
-    --write_read : process (clk, s_cs, s_address, s_read, s_write, wrdata) is
-    --begin
-    --rddata <= (others => 'Z');
-    --if (rising_edge(clk)) then
-    --if (s_cs = '1') then
-    --if (s_read = '1') then
-    --s_rddata <= reg(to_integer(unsigned(s_address)));
-    --end if;
-
-    --if (s_write = '1') then
-    --reg(to_integer(unsigned(s_address))) <= wrdata;
-    --end if;
-    --end if;
-    --end if;
-    --end process write_read;
-
 end synth;
