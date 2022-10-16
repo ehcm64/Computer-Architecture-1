@@ -38,7 +38,7 @@ entity controller is
 end controller;
 
 architecture synth of controller is
-    type state is (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, I_OP, LOAD2);
+    type state is (FETCH1, FETCH2, DECODE, R_OP, I_OP, STORE, BREAK, LOAD1, LOAD2);
     signal s_current_state, s_next_state : state;
 
 begin
@@ -55,9 +55,43 @@ begin
     begin
         case op is
             when "111010" =>
-                op_alu <= opx;
+
+                op_alu(2 downto 0) <= opx(5 downto 3);
+                case opx(3 downto 0) is
+                    when x"6" =>
+                        op_alu(5 downto 3) <= "100";
+                    when x"e" =>
+                        op_alu(5 downto 3) <= "100";
+                    when x"1" =>
+                        op_alu(5 downto 3) <= "000";
+                    when x"9" =>
+                        op_alu(5 downto 3) <= "001";
+                    when x"8" =>
+                        op_alu(5 downto 3) <= "011";
+                    when x"0" =>
+                        op_alu(5 downto 3) <= "011";
+                    when others =>
+                        op_alu(5 downto 3) <= "110";
+                end case;
+
+            when "010111" =>
+                op_alu <= "000000";
+            when "010101" =>
+                op_alu <= "000000";
             when others =>
-                op_alu <= op;
+                op_alu(2 downto 0) <= op(5 downto 3);
+                case op(3 downto 0) is
+                    when x"C" =>
+                        op_alu(5 downto 3) <= "100";
+                    when x"4" =>
+                        if (op(5 downto 4) = "00") then
+                            op_alu(5 downto 3) <= "000";
+                        else
+                            op_alu(5 downto 3) <= "100";
+                        end if;
+                    when others =>
+                        op_alu(5 downto 3) <= "011";
+                end case;
         end case;
     end process op_alu_proc;
 
@@ -65,37 +99,34 @@ begin
     begin
         s_next_state <= s_current_state;
         case s_current_state is
-
             when FETCH1 =>
-
-                read <= '1';
-
-                branch_op  <= '0';
-                imm_signed <= '0';
-                ir_en      <= '0';
-                pc_add_imm <= '0';
-                pc_en      <= '0';
-                pc_sel_a   <= '0';
-                pc_sel_imm <= '0';
-                rf_wren    <= '0';
-                sel_addr   <= '0';
-                sel_b      <= '0';
-                sel_mem    <= '0';
-                sel_pc     <= '0';
-                sel_ra     <= '0';
-                sel_rC     <= '0';
-                write      <= '0';
-
+                read         <= '1';
+                branch_op    <= '0';
+                imm_signed   <= '0';
+                ir_en        <= '0';
+                pc_add_imm   <= '0';
+                pc_en        <= '0';
+                pc_sel_a     <= '0';
+                pc_sel_imm   <= '0';
+                rf_wren      <= '0';
+                sel_addr     <= '0';
+                sel_b        <= '0';
+                sel_mem      <= '0';
+                sel_pc       <= '0';
+                sel_ra       <= '0';
+                sel_rC       <= '0';
+                write        <= '0';
                 s_next_state <= FETCH2;
 
             when FETCH2 =>
-
+                read         <= '0';
                 pc_en        <= '1';
                 ir_en        <= '1';
                 s_next_state <= DECODE;
 
             when DECODE =>
-
+                pc_en <= '0';
+                ir_en <= '0';
                 if (op = "111010" AND opx = "110100") then
                     s_next_state <= BREAK;
                 elsif (op = "010111") then
@@ -109,39 +140,31 @@ begin
                 end if;
 
             when R_OP =>
+                rf_wren      <= '1';
+                sel_rC       <= '1';
+                sel_b        <= '1';
+                s_next_state <= FETCH1;
 
+            when I_OP =>
+                imm_signed   <= '1';
+                rf_wren      <= '1';
                 s_next_state <= FETCH1;
 
             when STORE =>
-
-                imm_signed <= '1';
-                sel_b      <= '0';
-
+                imm_signed   <= '1';
+                sel_b        <= '0';
                 sel_addr     <= '1';
                 write        <= '1';
                 s_next_state <= FETCH1;
 
-            when BREAK =>
-
+            when BREAK =>               -- @suppress "Dead state 'BREAK': state does not have outgoing transitions"
                 s_next_state <= BREAK;
 
             when LOAD1 =>
-
-                imm_signed <= '1';
-
+                imm_signed   <= '1';
                 sel_addr     <= '1';
                 read         <= '1';
                 s_next_state <= LOAD2;
-
-            when I_OP =>
-
-                if (op = "011001" OR op = "011010") then
-                    imm_signed <= '1';
-                else
-                    imm_signed <= '0';
-                end if;
-                rf_wren      <= '1';
-                s_next_state <= FETCH1;
 
             when LOAD2 =>
                 sel_mem      <= '1';
