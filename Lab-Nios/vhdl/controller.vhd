@@ -91,6 +91,7 @@ begin
             when FETCH2 =>
 
                 pc_en        <= '1';
+                ir_en        <= '1';
                 s_next_state <= DECODE;
 
             when DECODE =>
