@@ -12,7 +12,7 @@ end IR;
 
 architecture synth of IR is
 begin
-    flip_flop : process(clk, enable, D) is
+    flip_flop : process(clk) is
     begin
         if (rising_edge(clk) and enable = '1') then
             Q <= D;
