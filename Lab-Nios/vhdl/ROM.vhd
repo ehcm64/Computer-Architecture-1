@@ -22,13 +22,13 @@ architecture synth of ROM is
 
     signal s_address    : std_logic_vector(9 downto 0);
     signal s_cs, s_read : std_logic;
-    signal s_rddata     : std_logic_vector(31 downto 0);
+    signal s_q     : std_logic_vector(31 downto 0);
 begin
     ROM_b : ROM_Block
         PORT MAP(
-            address => s_address,
+            address => address,
             clock   => clk,
-            q       => s_rddata
+            q       => s_q
         );
 
     p_buff : process(clk, address, cs, read) is
@@ -42,11 +42,11 @@ begin
 
     p_read : process(clk, s_cs, s_address, s_read) is
     begin
-        rddata <= (others => 'Z');
-        if (rising_edge(clk)) then
-            if (s_cs = '1' and s_read = '1') then
-                rddata <= s_rddata;
-            end if;
+       if (s_cs = '1' and s_read = '1') then
+            rddata <= s_q;
+        else
+            rddata <= (others => 'Z');
         end if;
+       
     end process p_read;
 end synth;

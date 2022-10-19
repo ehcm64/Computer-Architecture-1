@@ -30,10 +30,10 @@ begin
 
     p_read : process(s_read, s_address, reg) is
     begin
-        rddata <= (others => 'Z');
         if (s_read = '1') then
-            rddata <= (others => '0');
             rddata <= reg(to_integer(unsigned(s_address)));
+        else
+            rddata <= (others => 'Z');
         end if;
     end process p_read;
 

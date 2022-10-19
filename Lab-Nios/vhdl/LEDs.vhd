@@ -13,7 +13,6 @@ entity LEDs is
         address : in  std_logic_vector(1 downto 0);
         rddata  : out std_logic_vector(31 downto 0);
         wrdata  : in  std_logic_vector(31 downto 0);
-
         -- external output
         LEDs    : out std_logic_vector(95 downto 0)
     );
@@ -29,21 +28,21 @@ architecture synth of LEDs is
     signal reg_address : std_logic_vector(1 downto 0);
     signal counter     : std_logic_vector(7 downto 0);
     signal LEDs_reg    : std_logic_vector(95 downto 0);
-	 signal LEDs_FPGA4U    : std_logic_vector(95 downto 0);
+    signal LEDs_FPGA4U : std_logic_vector(95 downto 0);
     signal duty_cycle  : std_logic_vector(7 downto 0);
 
 begin
     LEDs_FPGA4U <= LEDs_reg when counter < duty_cycle else (others => '0');
-	 -- On FPGA4U, LEDs were addressed by column, on GECKO by row and mirrored
-	 -- Therefore, we need to transpose the indices and flip the indeces along x
-	 process(LEDs_FPGA4U)
-	 variable LEDs_before_transpose: std_logic_vector(95 downto 0);
-	 begin
-		for i in 0 to 95 loop
-			LEDs_before_transpose(i / 8 + (i mod 8) * 12) := LEDs_FPGA4U(i);
-			LEDs(i) <= LEDs_before_transpose((i / 12 + 1) * 12 - 1 - (i mod 12));
-		end loop;
-	 end process;
+    -- On FPGA4U, LEDs were addressed by column, on GECKO by row and mirrored
+    -- Therefore, we need to transpose the indices and flip the indeces along x
+    process(LEDs_FPGA4U)
+        variable LEDs_before_transpose : std_logic_vector(95 downto 0);
+    begin
+        for i in 0 to 95 loop
+            LEDs_before_transpose(i / 8 + (i mod 8) * 12) := LEDs_FPGA4U(i);
+            LEDs(i)                                       <= LEDs_before_transpose((i / 12 + 1) * 12 - 1 - (i mod 12));
+        end loop;
+    end process;
 
     -- registers
     process(clk, reset_n)

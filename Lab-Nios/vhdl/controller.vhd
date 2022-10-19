@@ -229,7 +229,7 @@ begin
             when RI_OP =>
                 rf_wren      <= '1';
                 sel_b        <= '0';
-                sel_rC       <= '0';
+                sel_rC       <= '1';
                 s_next_state <= FETCH1;
         end case;
 

@@ -27,13 +27,13 @@ begin
         elsif (rising_edge(clk)) then
             if (en = '1') then
                 if (add_imm = '1') then
-                    s_addr <= std_logic_vector(signed(s_addr) + signed(imm));
+                    s_addr <= std_logic_vector(unsigned(s_addr) + signed(imm));
                 elsif (sel_imm = '1') then
                     s_addr <= "00000000000000" & imm & "00";
                 elsif (sel_a = '1') then
                     s_addr <= "0000000000000000" & a;
                 else
-                    s_addr <= std_logic_vector(signed(s_addr) + 4);
+                    s_addr <= std_logic_vector(unsigned(s_addr) + 4);
                 end if;
             end if;
         end if;
