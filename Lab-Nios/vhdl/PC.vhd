@@ -20,18 +20,18 @@ architecture synth of PC is
     signal s_addr : std_logic_vector(31 downto 0);
 begin
 
-    p_addr : process(reset_n, clk) is
+    p_addr : process(reset_n, clk, en) is
     begin
         if (reset_n = '0') then
-            s_addr <= (others => '0');
+            s_addr <= "00000000000000000000000000000000";
         elsif (rising_edge(clk)) then
             if (en = '1') then
                 if (add_imm = '1') then
-                    s_addr <= std_logic_vector(signed(s_addr) + signed(imm));
+                    s_addr <= std_logic_vector(signed(s_addr) + signed(imm(15 downto 2) & "00"));
                 elsif (sel_imm = '1') then
                     s_addr <= "0000000000000000" & imm(13 downto 0) & "00";
                 elsif (sel_a = '1') then
-                    s_addr <= "0000000000000000" & a;
+                    s_addr <= "0000000000000000" & a(15 downto 2) & "00";
                 else
                     s_addr <= std_logic_vector(unsigned(s_addr) + 4);
                 end if;
