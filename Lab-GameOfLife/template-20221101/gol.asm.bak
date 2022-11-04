@@ -29,41 +29,13 @@
     .equ RUNNING, 0x01
 
 main:
-    jmp clear_leds
-	addi a0, zero, 5
-	addi a1, zero, 1 
-	set_pixel
+    ;; TODO
 
-;	BEGIN:clear_leds
+;  BEGIN:clear_leds
 clear_leds:
-    stw zero, LEDS[0](zero)
-	stw zero, LEDS[1](zero)
-	stw zero, LEDS[2](zero)
+    ;  code
     ret
-;	END:clear_leds
-
-;	BEGIN:set_pixel
-set_pixel:
-	addi t3, t3, zero
-	addi s0, zero 0x8
-	addi t0, zero, 0x1
-	cmpgei t1, a0, 4 
-	cmplti t2, a0, 8
-	and t1, t1, t2
-	beq t1, t0, caseLed1
-
-loop: 
-	addi t3, t3, 0x1
-		
-	
-
-
-	cmpgei t2, a0, 8
-	cmplti t3 a0, 12
-	and t2, t2, t3
-	nor 
-
-;	END:set_pixel
+;   END:clear_leds
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1
