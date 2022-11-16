@@ -29,13 +29,63 @@
     .equ RUNNING, 0x01
 
 main:
-    ;; TODO
+    jmp clear_leds
+	addi a0, zero, 5
+	addi a1, zero, 1 
+	set_pixel
 
-;  BEGIN:clear_leds
+;	BEGIN:clear_leds
 clear_leds:
-    ;  code
+    stw zero, LEDS[0](zero)
+	stw zero, LEDS[1](zero)
+	stw zero, LEDS[2](zero)
     ret
-;   END:clear_leds
+;	END:clear_leds
+
+;	BEGIN:set_pixel
+set_pixel:
+				;set_pixel(a0: x, a0: y):
+					;n = 8*x + y mod 32
+	addi t0, zero, 0
+	addi t1, a0, 0
+	addi t2, a1, 0
+	multiply_loop:
+		addi t3, zero, 3
+		add t1, t1, t1
+		addi t0, t0, 1
+		bne t0, t3, multiply_loop
+	add t1, t1, t2
+	slli t4, t1, 26 ; 1 if Led1
+	srli t4, t4, 31
+	slli t5, t1, 25 ; 1 if Led2
+	srli t5, t5, 31
+	slli t1, t1, 27 ; calculate led to activate
+	srli t1, t1, 27
+
+	addi t0, zero, 1
+	beq t0, t4, case_led1
+	beq t0, t5, case_led2
+	br case_led0
+	case_led0:
+																																																																										ldw t6, LEDS[0](zero)
+		srl t0, t0, t1
+		or t6, t6, t0
+		stw t6, LEDS[0](zero)
+		ret
+	case_led1:
+		ldw t6, LEDS[1](zero)
+		srl t0, t0, t1
+		or t6, t6, t0
+		stw t6, LEDS[1](zero)
+		ret
+	case_led2:
+		ldw t6, LEDS[2](zero)
+		srl t0, t0, t1
+		or t6, t6, t0
+		stw t6, LEDS[2](zero)
+		ret
+
+;	END:set_pixel
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1
