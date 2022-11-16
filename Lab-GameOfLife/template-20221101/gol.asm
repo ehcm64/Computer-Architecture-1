@@ -86,6 +86,18 @@ set_pixel:
 		ret
 
 ;	END:set_pixel
+
+; BEGIN: wait
+addi t1, zero, 1
+add s0, zero, zero
+wait: 
+	cmpgei t0, s0, 524288
+	add s0, s0, SPEED
+	bne t0,t1, wait 
+	ret
+;   END: wait
+
+
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1

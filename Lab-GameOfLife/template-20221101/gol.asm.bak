@@ -67,7 +67,7 @@ set_pixel:
 	beq t0, t5, case_led2
 	br case_led0
 	case_led0:
-																																																																										ldw t6, LEDS[0](zero)
+		ldw t6, LEDS[0](zero)
 		srl t0, t0, t1
 		or t6, t6, t0
 		stw t6, LEDS[0](zero)
