@@ -98,6 +98,9 @@ wait:
 ;   END: wait
 
 
+; BEGIN set_gsa 
+
+
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1
