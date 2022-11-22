@@ -29,16 +29,17 @@
     .equ RUNNING, 0x01
 
 main:
-    jmp clear_leds
-	addi a0, zero, 5
-	addi a1, zero, 1 
-	set_pixel
+    call clear_leds
+	addi t7, zero, 0b011101010101
+	stw t7, GSA0(zero)
+	call draw_gsa
+	
 
 ;	BEGIN:clear_leds
 clear_leds:
-    stw zero, LEDS[0](zero)
-	stw zero, LEDS[1](zero)
-	stw zero, LEDS[2](zero)
+    stw zero, LEDS(zero)
+	stw zero, LEDS+4(zero)
+	stw zero, LEDS+8(zero)
     ret
 ;	END:clear_leds
 
@@ -67,37 +68,103 @@ set_pixel:
 	beq t0, t5, case_led2
 	br case_led0
 	case_led0:
-		ldw t6, LEDS[0](zero)
+		ldw t6, LEDS(zero)
 		srl t0, t0, t1
 		or t6, t6, t0
-		stw t6, LEDS[0](zero)
+		stw t6, LEDS(zero)
 		ret
 	case_led1:
-		ldw t6, LEDS[1](zero)
+		ldw t6, LEDS+4(zero)
 		srl t0, t0, t1
 		or t6, t6, t0
-		stw t6, LEDS[1](zero)
+		stw t6, LEDS+4(zero)
 		ret
 	case_led2:
-		ldw t6, LEDS[2](zero)
+		ldw t6, LEDS+8(zero)
 		srl t0, t0, t1
 		or t6, t6, t0
-		stw t6, LEDS[2](zero)
+		stw t6, LEDS+8(zero)
 		ret
 
 ;	END:set_pixel
 
-; BEGIN: wait
-addi t1, zero, 1
-add s0, zero, zero
+; BEGIN:wait
 wait: 
-	cmpgei t0, s0, 524288
-	add s0, s0, SPEED
-	bne t0,t1, wait 
-	ret
-;   END: wait
+	addi t1, zero, 1
+	addi t2, zero, 1 ; 
+	slli t2, t2, 19     ;2^19
+	
+	add s0, zero, zero
+	wait1:
+		cmpge t0, s0, t2
+		addi s0, s0, SPEED
+		bne t0 ,t1, wait1 
+		ret
+;   END:wait
 
+;	BEGIN:get_gsa
+get_gsa:
+	addi t0, zero, -4
+	addi t1, zero,-1
+	addi t2, zero, GSA_ID	
 
+ 	countGet:
+		addi t0, t0, 4
+		addi t1, t1, 1
+		bne t1, a0, countGet
+	addi t1, zero, 1
+	beq t1, t2, caseID1Get
+	caseID0Get:
+		addi v0, t0, GSA0 
+	caseID1Get:
+		addi v0, t0, GSA1 
+;	END:get_gsa
+
+;	BEGIN:set_gsa
+set_gsa: 
+	addi t0, zero, -4
+	addi t1, zero, -1
+	addi t2, zero, GSA_ID
+ 	countSet:
+		addi t0, t0, 4
+		addi t1, t1, 1
+		bne t1, a1, countSet
+
+	addi t1, zero, 1
+	beq t1, t2, caseID1Set
+	caseIDOSet:
+		stw a0, GSA0(t0) 
+	caseID1Set:
+		stw a0, GSA1(t0)
+;	END:set_gsa
+
+;	BEGIN:draw_gsa
+draw_gsa:
+	addi s0, zero, 1 ; mask 0
+	addi s1, zero, 1 ; mask 1
+	slli s1, s1, 4 
+	addi s2, zero, 1 ; mask 2
+	slli s2, s2, 8
+
+	addi t0, zero, 0 ; counter
+	addi s3, zero, 7 ; max
+
+	loop0:
+		ldw t3, GSA0(t0)
+		and t0, s0, t3
+		and t1, s1, t3
+		and t2, s2, t3
+		 
+		
+		
+	
+		
+			 
+	
+		
+	
+		
+							
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1
