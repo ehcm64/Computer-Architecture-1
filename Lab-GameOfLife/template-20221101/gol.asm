@@ -28,12 +28,33 @@
     .equ PAUSED, 0x00
     .equ RUNNING, 0x01
 
+;	BEGIN:main
 main:
-    call clear_leds
-	addi a0, zero, 2
-	addi a1, zero, 4
-	call set_pixel
-	
+    ; 3.10 begin
+	call reset_game
+	call get_input
+	addi s0, v0, 0
+	addi s1, zero, 0
+	addi s2, zero, 1
+	while:
+		addi a0, s0, 0
+		call select_action
+		call update_state
+		call update_gsa
+		call mask
+		call draw_gsa
+		call wait
+		call decrement_step
+		addi s1, v0, 0
+		call get_input
+		addi s0, v0, 0
+		bne s1, s2, while
+	; 3.10 end
+
+	;test begin
+	;test end
+;	END:main
+
 
 ;	BEGIN:clear_leds
 clear_leds:
@@ -411,6 +432,60 @@ mask:
 		addi sp, sp, 4
 		ret
 ;	END:mask
+
+;	BEGIN:decrement_step
+decrement_step:
+	ldw t0, CURR_STATE(zero)
+	ldw t1, CURR_STEP(zero)
+	addi t2, zero, 2
+	beq t0, t2, decrement_step_case_run
+	br display_steps
+	decrement_step_case_run:
+		bne t1, zero, decrement_and_ret0
+		addi v0, zero, 1
+		ret
+		decrement_and_ret0:
+			addi t1, t1, -1
+			br display_steps
+	display_steps:
+		addi v0, zero, 0
+		andi t3, t1, 0x0000F000
+		slli t3, t3, 10
+		ldw t3, font_data(t3)
+		andi t4, t1, 0x00000F00
+		slli t4, t4, 6
+		ldw t4, font_data(t4)
+		andi t5, t1, 0x000000F0
+		slli t5, t5, 2
+		ldw t5, font_data(t5)
+		andi t6, t1, 0x0000000F
+		srli t6, t6, 2
+		ldw t6, font_data(t6)
+		stw t3, SEVEN_SEGS(zero)
+		stw t4, SEVEN_SEGS+4(zero)
+		stw t5, SEVEN_SEGS+8(zero)
+		stw t6, SEVEN_SEGS+12(zero)
+		ret
+;	END:decrement_step
+
+;	BEGIN:reset_game
+reset_game:
+	addi t1, zero, 1
+	stw t1, CURR_STEP(zero)
+	ldw t0, font_data(zero)
+	ldw t2, font_data+4(zero)
+	stw t0, SEVEN_SEGS(zero)
+	stw t0, SEVEN_SEGS+4(zero)
+	stw t0, SEVEN_SEGS+8(zero)
+	stw t2, SEVEN_SEGS+12(zero)
+	stw zero, SEED(zero)
+	stw zero, CURR_STATE(zero)
+	stw zero, SEED(zero)
+	stw t1, CURR_STEP(zero)
+	stw zero, GSA_ID(zero)
+	stw zero, PAUSE(zero)
+	stw t1, SPEED(zero)
+;	END:reset_game
 
 
 
