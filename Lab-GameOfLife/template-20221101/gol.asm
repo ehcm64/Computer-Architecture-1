@@ -31,6 +31,7 @@
 ;	BEGIN:main
 main:
     ; 3.10 begin
+	addi sp, zero, 0x1300
 	call reset_game
 	call get_input
 	addi s0, v0, 0
@@ -470,6 +471,9 @@ decrement_step:
 
 ;	BEGIN:reset_game
 reset_game:
+	addi sp, sp, -4
+	stw ra, 0(sp)
+
 	addi t1, zero, 1
 	stw t1, CURR_STEP(zero)
 	ldw t0, font_data(zero)
@@ -480,11 +484,24 @@ reset_game:
 	stw t2, SEVEN_SEGS+12(zero)
 	stw zero, SEED(zero)
 	stw zero, CURR_STATE(zero)
-	stw zero, SEED(zero)
 	stw t1, CURR_STEP(zero)
 	stw zero, GSA_ID(zero)
 	stw zero, PAUSE(zero)
 	stw t1, SPEED(zero)
+
+	addi t0, zero, 0
+	addi t1, zero, 8
+	reset_loop:         ; load seed 0 in GSA 0
+	slli t3, t0, 2
+	ldw t2, seed0(t3)
+	addi a0, t2, zero
+	addi a1, t0, zero
+	call set_gsa
+	addi t0, t0, 1
+	bne t0, t1, reset_loop
+	ret
+	
+						
 ;	END:reset_game
 
 
