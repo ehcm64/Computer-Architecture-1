@@ -28,12 +28,34 @@
     .equ PAUSED, 0x00
     .equ RUNNING, 0x01
 
+;	BEGIN:main
 main:
-    call clear_leds
-	addi a0, zero, 2
-	addi a1, zero, 4
-	call set_pixel
-	
+    ; 3.10 begin
+	addi sp, zero, 0x1300
+	call reset_game
+	call get_input
+	addi s0, v0, 0
+	addi s1, zero, 0
+	addi s2, zero, 1
+	while:
+		addi a0, s0, 0
+		call select_action
+		call update_state
+		call update_gsa
+		call mask
+		call draw_gsa
+		call wait
+		call decrement_step
+		addi s1, v0, 0
+		call get_input
+		addi s0, v0, 0
+		bne s1, s2, while
+	; 3.10 end
+
+	;test begin
+	;test end
+;	END:main
+
 
 ;	BEGIN:clear_leds
 clear_leds:
@@ -48,22 +70,22 @@ set_pixel:
 				;set_pixel(a0: x, a0: y):
 					;n = 8*x + y mod 32
 	slli a0, a0, 3          
-	add a0, a0, a1
+	add a0, a0, a1       ; a0 = 8x + y
 	
-	addi t0, zero, 32
-	addi t1, zero, 64
+	addi t0, zero, 32    ; t0 = 32
+	addi t1, zero, 64	 ; t1 = 64
 	
 	bge a0, t1, case_led2
 	bge a0, t0, case_led1
 	br case_led0
 	case_led0:
-		ldw t2, LEDS(zero)
-		addi t3, zero, 1
-		slli a0, a0, 27
-		srli a0, a0, 27
-		sll t3, t3, a0
-		or t2, t2, t3
-		stw t2, LEDS(zero)
+		ldw t2, LEDS(zero)     
+		addi t3, zero, 1             ; t3 = 1
+		slli a0, a0, 27				 
+		srli a0, a0, 27                ; 8x + y mod 32
+		sll t3, t3, a0                ; mask 1 << 8x + y mod 32
+		or t2, t2, t3                ; mask | leds
+		stw t2, LEDS(zero)			  ; new leds into leds
 		ret
 	case_led1:
 		ldw t2, LEDS+4(zero)
@@ -83,12 +105,9 @@ set_pixel:
 		or t2, t2, t3
 		stw t2, LEDS+4(zero)
 		ret
-
 ;	END:set_pixel
 
-; BEGIN: wait
-addi t1, zero, 1
-add s0, zero, zero
+;	BEGIN:wait
 wait: 
 	addi t1, zero, 1
 	addi t2, zero, 1 ; 
@@ -155,15 +174,336 @@ draw_gsa:
 		and t1, s1, t3
 		and t2, s2, t3
 		 
+;	END:draw_gsa
+
+;	BEGIN:random_gsa
+random_gsa:
+	addi sp, sp, -4
+	stw ra, 0(sp)
+	addi t5, zero, 8
+	addi t4, zero, 0
+	random_gsa_loop1:
+	add a0, zero, t4
+	call get_gsa	
+	add t2, zero, v0     ; the line
+	add t0, t0, zero      ; counter
+	addi t3, zero, 12	   ; max counter value
+	random_gsa_loop2:
+		ldw t1, RANDOM_NUM(zero)    ; random number
+		andi t1, t1, 1           	 ; random number mod 2
+		sll t1, t1, t0                ; shift left the 1 or 0 in LSB to x-coord value of counter
+		or t2, t2, t1				 ; or the mask with the line
+		addi t0, t0, 1				 ; i++
+		bne t0, t3, random_gsa_loop2	 ; while i != 12
+	add a0, zero, t2			    
+	add a1, zero, t4
+	call set_gsa
+	addi t4, t4, 1
+	bne t4, t5, random_gsa_loop1
+	ldw ra, 0(sp)
+	addi sp, sp, 4
+	ret
+;	END:random_gsa
+
+
+;	BEGIN:cell_fate
+cell_fate:
+	; a0 = number of live neighbouring cells
+	; a1 = examined cell state
+	addi t1, zero, 1
+	addi t2, zero, 2
+	addi t3, zero, 3
+	beq a1, t1, living
+	br dead
+	living:
+		blt a0, t2, underpopulation
+		bge a0, t3, overpopulation
+		br stasis
+		underpopulation:
+			addi v0, zero, 0
+			ret
+		overpopulation:
+			addi v0, zero, 0
+			ret
+		stasis:
+			addi v0, a1, 0
+			ret
+	dead:
+		beq a0, t3, reproduction
+		ret
+		reproduction:
+			addi v0, zero, 1
+			ret
+;	END:cell_fate
+
+;	BEGIN:find_neighbours
+find_neighbours:
+	addi sp, sp, -4
+	stw ra, 0(sp)
+	addi t1, a0, 0
+	addi t4, a1, 0
+	addi t3, t4, -1
+	andi t3, t3, 7
+	addi t5, t2, 1
+	andi t5, t5, 7
+	addi t0, t1, -1
+	addi t2, t1, 1
+	addi t6, zero, 12
+	addi t7, zero, -1
+	beq t0, t6, mod_12_minus_t0
+	beq t0, t7, mod_12_plus_t0
+	br body_find_neighbours
+	mod_12_minus_t0:
+		addi t0, t0, -12
+		br body_find_neighbours
+	mod_12_plus_t0:
+		addi t0, t0, 12
+		br body_find_neighbours
+	body_find_neighbours:
+		beq t2, t6, mod_12_minus_t2
+		beq t2, t7, mod_12_plus_t2
+	mod_12_minus_t2:
+		addi t2, t2, -12
+		br body_2_find_neighbours
+	mod_12_plus_t2:
+		addi t2, t2, 12
+		br body_2_find_neighbours
+	body_2_find_neighbours:
+		addi sp, sp, -12
+		stw t0, 8(sp)
+		stw t1, 4(sp)
+		stw t2, 0(sp)
+		addi a0, t3, 0
+		call get_gsa
+		add t3, zero, v0
+		addi a0, t4, 0
+		call get_gsa
+		add t4, zero, v0
+		addi a0, t5, 0
+		call get_gsa
+		add t5, zero, v0
+
+		ldw t0, 8(sp)
+		ldw t1, 4(sp)
+		ldw t2, 0(sp)
+		addi sp, sp, 12
+
+		addi v0, zero, 0
+		addi t6, zero, 1
+
+		sll t7, t6, t0
+		and t7, t7, t3
+		srl t7, t7, t0
+		add v0, v0, t7
+
+		sll t7, t6, t1
+		and t7, t7, t3
+		srl t7, t7, t1
+		add v0, v0, t7
+
+		sll t7, t6, t2
+		and t7, t7, t3
+		srl t7, t7, t2
+		add v0, v0, t7
 		
+		sll t7, t6, t0
+		and t7, t7, t4
+		srl t7, t7, t0
+		add v0, v0, t7
+
+		sll t7, t6, t2
+		and t7, t7, t4
+		srl t7, t7, t2
+		add v0, v0, t7
 		
-	
+		sll t7, t6, t0
+		and t7, t7, t5
+		srl t7, t7, t0
+		add v0, v0, t7
+
+		sll t7, t6, t1
+		and t7, t7, t5
+		srl t7, t7, t1
+		add v0, v0, t7
 		
-			 
-	
-		
-	
-		
+		sll t7, t6, t2
+		and t7, t7, t5
+		srl t7, t7, t2
+		add v0, v0, t7
+
+		sll t7, t6, t1
+		and t7, t7, t4
+		srl t7, t7, t1
+		add v1, t7, zero
+		ldw ra, 0(sp)
+		addi sp, sp, 4
+		ret 
+;	END:find_neighbours
+
+;	BEGIN:update_gsa
+update_gsa:
+	ldw t0, PAUSE(zero)
+	addi t1, zero, PAUSED
+	beq t0, t1, update_gsa_ret
+	stw ra, 0(sp)
+	addi t1, zero, 0
+	addi t0, zero, 0
+	addi t6, zero, 12
+	addi t7, zero, 8 
+	addi t3, zero, 0
+	update_gsa_loop_y:
+	ldw t4, GSA_ID(zero)
+	addi a0, t1, 0
+	addi sp, sp, -4
+	call get_gsa
+	addi t2, v0, 0
+		update_gsa_loop_x:
+		addi a0, t0, 0
+		addi a1, t1, 0
+		call find_neighbours
+		addi a0, v0, 0
+		addi a1, v1, 0
+		call cell_fate
+		addi t5, v0, 0
+		sll t5, t5, t0
+		or t3, t3, t5
+		addi t0, t0, 1
+		bne t0, t6, update_gsa_loop_x
+	addi a0, t3, 0
+	addi a1, t1, 0
+	xori t4, t4, 1
+	stw t4, GSA_ID(zero)
+	call set_gsa
+	xori t4, t4, 1
+	stw t4, GSA_ID(zero)
+	addi t1, t1, 1
+	bne t1, t7, update_gsa_loop_y
+	update_gsa_ret:
+		ldw ra, 0(sp)
+		addi sp, sp, 4
+		xori t4, t4, 1
+		stw t4, GSA_ID(zero)
+		ret
+;	END:update_gsa
+
+;	BEGIN:mask
+mask:
+	addi sp, sp, -4
+	stw ra, 0(sp)
+	addi t0, zero, 3
+	addi t1, zero, 1
+	addi t2, zero, 2
+	addi t3, zero, 0
+	addi t7, zero, 8
+	ldw t4, CURR_STATE(zero)
+	bne t4, t1, mask_normal_state
+	mask_rand_state:
+		addi t6, zero, mask4
+		br mask_use_mask
+	mask_normal_state:
+		ldw t5, SEED(zero)
+		beq t5, zero, set_mask0
+		beq t5, t1, set_mask1
+		beq t5, t2, set_mask2
+		beq t5, t0, set_mask3
+		set_mask0:
+			addi t6, zero, mask0
+			br mask_use_mask
+		set_mask1:
+			addi t6, zero, mask1
+			br mask_use_mask
+		set_mask2:
+			addi t6, zero, mask2
+			br mask_use_mask
+		set_mask3:
+			addi t6, zero, mask3
+			br mask_use_mask
+	mask_use_mask:
+		addi a0, t3, 0
+		call get_gsa
+		addi a0, v0, 0
+		ldw t4, 0(t6)
+		and a0, a0, t4
+		addi a1, t3, 0
+		call set_gsa
+		addi t3, t3, 4
+		addi t6, t6, 4   ; to put in first line of this label if needed + 4 for ldw 5 lines up
+		bne t3, t7, mask_use_mask
+		ldw ra, 0(sp)
+		addi sp, sp, 4
+		ret
+;	END:mask
+
+;	BEGIN:decrement_step
+decrement_step:
+	ldw t0, CURR_STATE(zero)
+	ldw t1, CURR_STEP(zero)
+	addi t2, zero, 2
+	beq t0, t2, decrement_step_case_run
+	br display_steps
+	decrement_step_case_run:
+		bne t1, zero, decrement_and_ret0
+		addi v0, zero, 1
+		ret
+		decrement_and_ret0:
+			addi t1, t1, -1
+			br display_steps
+	display_steps:
+		addi v0, zero, 0
+		andi t3, t1, 0x0000F000
+		slli t3, t3, 10
+		ldw t3, font_data(t3)
+		andi t4, t1, 0x00000F00
+		slli t4, t4, 6
+		ldw t4, font_data(t4)
+		andi t5, t1, 0x000000F0
+		slli t5, t5, 2
+		ldw t5, font_data(t5)
+		andi t6, t1, 0x0000000F
+		srli t6, t6, 2
+		ldw t6, font_data(t6)
+		stw t3, SEVEN_SEGS(zero)
+		stw t4, SEVEN_SEGS+4(zero)
+		stw t5, SEVEN_SEGS+8(zero)
+		stw t6, SEVEN_SEGS+12(zero)
+		ret
+;	END:decrement_step
+
+;	BEGIN:reset_game
+reset_game:
+	addi sp, sp, -4
+	stw ra, 0(sp)
+
+	addi t1, zero, 1
+	stw t1, CURR_STEP(zero)
+	ldw t0, font_data(zero)
+	ldw t2, font_data+4(zero)
+	stw t0, SEVEN_SEGS(zero)
+	stw t0, SEVEN_SEGS+4(zero)
+	stw t0, SEVEN_SEGS+8(zero)
+	stw t2, SEVEN_SEGS+12(zero)
+	stw zero, SEED(zero)
+	stw zero, CURR_STATE(zero)
+	stw t1, CURR_STEP(zero)
+	stw zero, GSA_ID(zero)
+	stw zero, PAUSE(zero)
+	stw t1, SPEED(zero)
+
+	addi t0, zero, 0
+	addi t1, zero, 8
+	reset_loop:         ; load seed 0 in GSA 0
+	slli t3, t0, 2
+	ldw t2, seed0(t3)
+	add a0, t2, zero
+	add a1, t0, zero
+	call set_gsa
+	addi t0, t0, 1
+	bne t0, t1, reset_loop
+	ret				
+;	END:reset_game
+
+
+
 							
 font_data:
     .word 0xFC ; 0
