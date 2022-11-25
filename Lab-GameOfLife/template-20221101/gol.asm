@@ -787,6 +787,9 @@ reset_game:
 ;	END:reset_game
 
 load_seed_in_gsa:   ; a0 = SEED[n]
+	addi sp, sp, -4
+	stw ra, 0(sp)
+
 	addi t0, zero, 0
 	addi t1, zero, N_GSA_LINES
 	addi t3, a0, 0
@@ -801,6 +804,9 @@ load_seed_in_gsa:   ; a0 = SEED[n]
 	addi t3, t3, 4
 	addi t0, t0, 1
 	bne t0, t1, load_seed_loop
+
+	ldw ra, 0(sp)
+	addi sp, sp, 4
 	ret
 
 
