@@ -149,74 +149,42 @@ set_gsa:
 
 ;	BEGIN:draw_gsa
 draw_gsa:
-	addi sp, sp, -12
-	stw s0, 8(sp)
-	stw s1, 4(sp)
-	stw s2, 0(sp)
-	
-	addi t0, zero, 0 ; y
-	addi s0, zero, 8 ; max 
-	addi t1, zero, 0 ; x
-	addi s1, zero, 12 ; max x
-	addi t2, zero, 0 ; GSA = counter
-	
-	addi s2, zero, 0
-	addi t6, zero, 0
-	addi t7, zero, 0
- 	
-	drawLoop1: ; on y
-		addi t5, zero, 0
-		addi t1, zero, 0
-		bne t0, s0, drawLoop2
-		stw s2, LEDS(zero)
-		stw t6, LEDS+4(zero)
-		stw t7, LEDS+8(zero)
-		ldw s2, 0(sp)
-		ldw s1, 4(sp)
-		ldw s0, 8(sp)
-		addi sp, sp, 12
-		ret
+	addi sp, sp, -4
+	stw ra, 0(sp)
 
-		drawLoop2: ; on x
-			
-			ldw t3, GSA0(t2) ; word loaded from GSA0
-			addi t4, zero, 1	; mask
-			sll t4, t4, t1
-			and t4, t3, t4	; bit at position x
-			srl t4, t4, t1  ; bit at position 0
-			
-			addi t3, zero, 0  ; 8x + y
-			add t3, t3, t1
-			slli t3, t3, 3 
-			add t3, t3, t0
-			
-			addi t5, zero, 32
-			bge t3, t5, drawCase1
-			
-			drawCase0:
-				sll t4, t4, t3
-				or s2, s2, t4
-				br drawGsaSmartLoop	
-			drawCase1:
-				addi t5, zero, 64
-				bge t3, t5, drawCase2
-				andi t3, t3, 31
-				sll t4, t4, t3
-				or t6, t6, t4
-				br drawGsaSmartLoop	
-	    	drawCase2:
-				andi t3, t3, 31
-				sll t4, t4, t3
-				or t7, t7, t4
-				br drawGsaSmartLoop
-				
-			drawGsaSmartLoop:
-				addi t1, t1, 1
-				bne t1, s1, drawLoop2
-				addi t0, t0, 1
-				addi t2, t2, 4
-				br drawLoop1
-		 
+	addi t1, zero, 0
+	addi t7, N_GSA_LINES
+	addi t6, N_GSA_COLUMNS
+
+	draw_gsa_y_loop:
+		addi a0, t1, zero
+		call temps_to_stack
+		call get_gsa
+		call stack_to_temps
+		addi t0, zero, 0
+
+		draw_gsa_x_loop:
+			addi t2, zero, 1
+			sll t2, t2, t0
+			and t2, t2, v0
+			bne t2, zero, draw_pixel
+			br end_x_loop
+			draw_pixel:
+				addi a0, t0, 0
+				addi a1, t1, 0
+				call temps_to_stack
+				call set_pixel
+				call stack_to_temps
+			end_x_loop:
+			addi t0, t0, 1
+			bne t0, t6, draw_gsa_x_loop
+
+		addi t1, t1, 1
+		bne t1, t7, draw_gsa_y_loop
+	
+	ldw ra, 0(sp)
+	addi, sp, sp, 4
+	ret 
 ;	END:draw_gsa
 
 ;	BEGIN:random_gsa
