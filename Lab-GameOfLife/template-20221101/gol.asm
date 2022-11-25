@@ -153,11 +153,11 @@ draw_gsa:
 	stw ra, 0(sp)
 
 	addi t1, zero, 0
-	addi t7, N_GSA_LINES
-	addi t6, N_GSA_COLUMNS
+	addi t7, zero, N_GSA_LINES
+	addi t6, zero, N_GSA_COLUMNS
 
 	draw_gsa_y_loop:
-		addi a0, t1, zero
+		addi a0, t1, 0
 		call temps_to_stack
 		call get_gsa
 		call stack_to_temps
@@ -183,7 +183,7 @@ draw_gsa:
 		bne t1, t7, draw_gsa_y_loop
 	
 	ldw ra, 0(sp)
-	addi, sp, sp, 4
+	addi sp, sp, 4
 	ret 
 ;	END:draw_gsa
 
@@ -778,7 +778,7 @@ reset_game:
 	stw zero, PAUSE(zero)
 	stw t1, SPEED(zero)
 
-	addi a0, seed0, 0
+	addi a0, zero, seed0
 	call load_seed_in_gsa
 
 	ldw ra, 0(sp)
