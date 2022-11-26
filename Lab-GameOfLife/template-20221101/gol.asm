@@ -167,7 +167,14 @@ draw_gsa:
 			draw_pixel:
 				addi a0, t4, 0  ;x
 				addi a1, t5, 0  ;y
+
+				addi sp, sp, -8
+				stw t3, 0(sp)
+				stw t4, 4(sp)
 				call set_pixel
+				ldw t3, 0(sp)
+				ldw t4, 4(sp)
+				addi sp, sp, 8
 			end_x_loop:
 			addi t4, t4, 1      ; x++
 			bne t4, t6, draw_gsa_x_loop
@@ -312,9 +319,9 @@ update_state:
 
 	ldw t0, CURR_STATE(zero) ; current state
 	addi t1, zero, RUN
-	beq t0, t3, updateRun
+	beq t0, t1, updateRun
 	addi t1, zero, RAND
-	beq t0, t3, updateRand
+	beq t0, t1, updateRand
 	updateInit:
 		ldw t0, SEED(zero)
 		addi t1, zero, N_SEEDS
@@ -325,6 +332,7 @@ update_state:
 	updateRand:
 		addi t1, zero, 2     ; to test if button 1 is activated
 		beq a0, t1, changeToRun
+		br updateEnd
 	updateRun:
 		addi t1, zero, 8     ; to test if button 3 is activated
 		beq a0, t1, changeToInit
@@ -334,6 +342,8 @@ update_state:
 	changeToInit:
 		addi t0, zero, INIT
 		stw t0, CURR_STATE(zero)
+		addi t0 , zero, PAUSED
+		stw t0, PAUSE(zero)
 		call reset_game
 		br updateEnd
 	changeToRand:
@@ -503,7 +513,7 @@ find_neighbours:
 		addi t2, t2, N_GSA_COLUMNS
 		br body_2_find_neighbours
 	body_2_find_neighbours:
-		addi sp, sp, 12
+		addi sp, sp, -12
 		stw t0, 0(sp)
 		stw t1, 4(sp)
 		stw t2, 8(sp)
@@ -598,6 +608,7 @@ update_gsa:
 	addi s3, zero, 0
 	update_gsa_loop_y:
 	ldw s4, GSA_ID(zero)     ; current gsa
+	addi s0, zero, 0
 		update_gsa_loop_x:
 		addi a0, s0, 0
 		addi a1, s1, 0
@@ -680,7 +691,7 @@ get_input:
 		bne t0, t4, get_input_loop
 	get_input_ith_bit_set:
 		addi v0, t3, 0
-		ldw zero, BUTTONS+4(zero)
+		stw zero, BUTTONS+4(zero)
 		ret
 ; END:get_input
 
@@ -701,13 +712,13 @@ decrement_step:
 	display_steps:
 		addi v0, zero, 0
 		andi t3, t1, 0x0000F000
-		slli t3, t3, 10
+		srli t3, t3, 10
 		ldw t3, font_data(t3)
 		andi t4, t1, 0x00000F00
-		slli t4, t4, 6
+		srli t4, t4, 6
 		ldw t4, font_data(t4)
 		andi t5, t1, 0x000000F0
-		slli t5, t5, 2
+		srli t5, t5, 2
 		ldw t5, font_data(t5)
 		andi t6, t1, 0x0000000F
 		srli t6, t6, 2
