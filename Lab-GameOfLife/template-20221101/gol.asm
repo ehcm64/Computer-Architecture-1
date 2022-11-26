@@ -373,10 +373,38 @@ select_action:
 		addi t2, zero, 4
 		addi t3, zero, 8
 		addi t4, zero, 16
-		addi t6, zero, INIT
-		beq t7, t6, select_action_case_init
-		addi t1, zero, RAND
-		beq t7, t6, select_action_case_rand
+		addi t6, zero, RUN
+		beq t7, t6, select_action_case_run
+
+		select_action_case_init_and_rand:
+			beq a0, t0, init_b0
+			beq a0, t2, init_b2
+			beq a0, t3, init_b3
+			beq a0, t4, init_b4
+			br select_action_end
+
+			init_b0:
+				call increment_seed
+				br select_action_end
+			init_b2:
+				addi a2, zero, 1
+				addi a1, zero, 0
+				addi a0, zero, 0
+				br init_b2_b3_b4
+			init_b3:
+				addi a2, zero, 0
+				addi a1, zero, 1
+				addi a0, zero, 0
+				br init_b2_b3_b4
+			init_b4:
+				addi a2, zero, 0
+				addi a1, zero, 0
+				addi a0, zero, 1
+				br init_b2_b3_b4
+			init_b2_b3_b4:
+				call change_steps
+				br select_action_end
+		
 		select_action_case_run:
 			beq a0, t0, run_b0
 			beq a0, t1, run_b1
@@ -398,58 +426,6 @@ select_action:
 			run_b4:
 				call random_gsa
 				br select_action_end
-				
-		select_action_case_init:
-			beq a0, t0, init_b0
-			beq a0, t2, init_b2
-			beq a0, t3, init_b3
-			beq a0, t4, init_b4
-			br select_action_end
-
-			init_b0:
-				ldw t5, SEED(zero)
-				addi t5, t5, 1          ; seed + 1
-				addi t6, zero, N_SEEDS  
-				beq t5, t6, select_action_end
-				stw t5, SEED(zero)      ; store new seed
-				slli t5, t5, 2         ; n-th seed : n*4
-				ldw t5, SEEDS(t5)
-				addi a1, zero, 0       ; line counter
-				load_new_seed:
-					ldw a0, 0(t5)  ; address of new seed
-					call set_gsa
-					addi t5, t5, 4
-					addi a1, a1, 1
-					bne a1, t4, load_new_seed
-				br select_action_end
-			init_b2:
-				addi a2, zero, 1
-				addi a1, zero, 0
-				addi a0, zero, 0
-				br init_b2_b3_b4
-			init_b3:
-				addi a2, zero, 0
-				addi a1, zero, 1
-				addi a0, zero, 0
-				br init_b2_b3_b4
-			init_b4:
-				addi a2, zero, 0
-				addi a1, zero, 0
-				addi a0, zero, 1
-				br init_b2_b3_b4
-			init_b2_b3_b4:
-				call change_steps
-				br select_action_end
-		
-		select_action_case_rand:
-			beq a0, t0, rand_b0
-			beq a0, t2, init_b2
-			beq a0, t3, init_b3
-			beq a0, t4, init_b4
-			br select_action_end
-
-			rand_b0:
-				call random_gsa
 
 		select_action_end:
 			ldw ra, 0(sp)
@@ -488,7 +464,7 @@ find_neighbours:
 	addi t4, a1, 0
 	addi t3, t4, -1
 	andi t3, t3, 7
-	addi t5, t2, 1
+	addi t5, t4, 1
 	andi t5, t5, 7
 	addi t0, t1, -1
 	addi t2, t1, 1
@@ -506,6 +482,7 @@ find_neighbours:
 	body_find_neighbours:
 		beq t2, t6, mod_12_minus_t2
 		beq t2, t7, mod_12_plus_t2
+		br body_2_find_neighbours
 	mod_12_minus_t2:
 		addi t2, t2, -N_GSA_COLUMNS
 		br body_2_find_neighbours
@@ -538,47 +515,47 @@ find_neighbours:
 		addi v0, zero, 0
 		addi t6, zero, 1
 
-		sll t7, t6, t0
+		sll t7, t6, t0     ;top left neighbour
 		and t7, t7, t3
 		srl t7, t7, t0
 		add v0, v0, t7
 
-		sll t7, t6, t1
+		sll t7, t6, t1     ; top center neighbour
 		and t7, t7, t3
 		srl t7, t7, t1
 		add v0, v0, t7
 
-		sll t7, t6, t2
+		sll t7, t6, t2    ; top right neighbour
 		and t7, t7, t3
 		srl t7, t7, t2
 		add v0, v0, t7
 		
-		sll t7, t6, t0
-		and t7, t7, t4
+		sll t7, t6, t0    ; mid left neighbour
+		and t7, t7, t4 
 		srl t7, t7, t0
 		add v0, v0, t7
 
-		sll t7, t6, t2
+		sll t7, t6, t2   ; mid right neighbour
 		and t7, t7, t4
 		srl t7, t7, t2
 		add v0, v0, t7
 		
-		sll t7, t6, t0
+		sll t7, t6, t0   ; low left neighbour
 		and t7, t7, t5
 		srl t7, t7, t0
 		add v0, v0, t7
 
-		sll t7, t6, t1
+		sll t7, t6, t1   ; low center neighbour
 		and t7, t7, t5
 		srl t7, t7, t1
 		add v0, v0, t7
 		
-		sll t7, t6, t2
+		sll t7, t6, t2   ; low right neighbour
 		and t7, t7, t5
 		srl t7, t7, t2
 		add v0, v0, t7
 
-		sll t7, t6, t1
+		sll t7, t6, t1   ; middle center cell for state
 		and t7, t7, t4
 		srl t7, t7, t1
 		add v1, t7, zero
@@ -605,10 +582,10 @@ update_gsa:
 	addi s0, zero, 0    ; x counter
 	addi s6, zero, N_GSA_COLUMNS
 	addi s7, zero, N_GSA_LINES
-	addi s3, zero, 0
 	update_gsa_loop_y:
 	ldw s4, GSA_ID(zero)     ; current gsa
 	addi s0, zero, 0
+	addi s3, zero, 0
 		update_gsa_loop_x:
 		addi a0, s0, 0
 		addi a1, s1, 0
