@@ -268,7 +268,7 @@ change_steps:
 		ret
 ; END:change_steps
 
-; BEGIN:increment seed
+; BEGIN:increment_seed
 increment_seed: 
 	addi sp, sp, -4
 	stw ra, 0(sp)
@@ -310,7 +310,7 @@ increment_seed:
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret
-; END:incremeent_seed
+; END:increment_seed
 
 ; BEGIN:update_state
 update_state:
