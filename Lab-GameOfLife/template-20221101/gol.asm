@@ -28,9 +28,8 @@
     .equ PAUSED, 0x00
     .equ RUNNING, 0x01
 
-;	BEGIN:main
+; BEGIN:main
 main:
-    ; 3.10 begin
 	addi sp, zero, 0x1300
 	call reset_game
 	call get_input
@@ -51,22 +50,18 @@ main:
 		call get_input
 		addi s0, v0, 0
 		bne s1, s2, while
-	; 3.10 end
-
-	;test begin
-	;test end
-;	END:main
+; END:main
 
 
-;	BEGIN:clear_leds
+; BEGIN:clear_leds
 clear_leds:
     stw zero, LEDS(zero)
 	stw zero, LEDS+4(zero)
 	stw zero, LEDS+8(zero)
     ret
-;	END:clear_leds
+; END:clear_leds
 
-;	BEGIN:set_pixel
+; BEGIN:set_pixel
 set_pixel:
 	slli a0, a0, 3          
 	add a0, a0, a1       ; a0 = 8x + y
@@ -90,9 +85,9 @@ set_pixel:
 		or t2, t2, t3                ; mask | leds
 		stw t2, 0(t4)			  ; new leds into leds
 		ret
-;	END:set_pixel
+; END:set_pixel
 
-;	BEGIN:wait
+; BEGIN:wait
 wait: 
 	addi t1, zero, 1
 	addi t2, zero, 1 ; 
@@ -104,9 +99,9 @@ wait:
 		addi t3, t3, SPEED
 		bne t0 ,t1, wait1 
 		ret
-;   END:wait
+; END:wait
 
-;	BEGIN:get_gsa
+; BEGIN:get_gsa
 get_gsa:
 	addi t0, zero, -4
 	addi t1, zero,-1
@@ -126,9 +121,9 @@ get_gsa:
 	caseID1Get:
 		ldw v0, GSA1(t0)
 		ret
-;	END:get_gsa
+; END:get_gsa
 
-;	BEGIN:set_gsa
+; BEGIN:set_gsa
 set_gsa: 
 	addi t0, zero, -4
 	addi t1, zero, -1
@@ -146,87 +141,74 @@ set_gsa:
 	caseID1Set:
 		stw a0, GSA1(t0)
 		ret
-;	END:set_gsa
+; END:set_gsa
 
-;	BEGIN:draw_gsa
+; BEGIN:draw_gsa
 draw_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
 	call clear_leds
 	
-	addi t1, zero, 0
+	addi t5, zero, 0         ; line counter
 	addi t7, zero, N_GSA_LINES
 	addi t6, zero, N_GSA_COLUMNS
 
 	draw_gsa_y_loop:
-		addi a0, t1, 0
-		call temps_to_stack
-		call get_gsa
-		call stack_to_temps
-		addi t0, zero, 0
-		addi t4, v0, 0
-
+		addi a0, t5, 0
+		call get_gsa        ;gsa line in v0
+		addi t4, zero, 0    ;x counter
 		draw_gsa_x_loop:
-			addi t2, zero, 1
-			sll t2, t2, t0
-			and t2, t2, t4
-			bne t2, zero, draw_pixel
+			addi t3, zero, 1    ; 1 for mask
+			sll t3, t3, t4       ; 0...1.00 mask at x-th bit of gsa line
+			and t3, t3, v0		;and the mask and gsa line
+			bne t3, zero, draw_pixel   ; if and != 0 then draw pixel
 			br end_x_loop
 			draw_pixel:
-				addi a0, t0, 0
-				addi a1, t1, 0
-				call temps_to_stack
+				addi a0, t4, 0  ;x
+				addi a1, t5, 0  ;y
 				call set_pixel
-				call stack_to_temps
 			end_x_loop:
-			addi t0, t0, 1
-			bne t0, t6, draw_gsa_x_loop
+			addi t4, t4, 1      ; x++
+			bne t4, t6, draw_gsa_x_loop
+		addi t5, t5, 1         ; y++
+		bne t5, t7, draw_gsa_y_loop
 
-		addi t1, t1, 1
-		bne t1, t7, draw_gsa_y_loop
-	
 	ldw ra, 0(sp)
 	addi sp, sp, 4
 	ret 
-;	END:draw_gsa
+; END:draw_gsa
 
-;	BEGIN:random_gsa
+; BEGIN:random_gsa
 random_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	addi t5, zero, N_GSA_LINES
-	addi t4, zero, 0
+	addi t7, zero, N_GSA_LINES
+	addi t6, zero, N_GSA_COLUMNS	  
+
+	addi t5, zero, 0 ; y counter
 	random_gsa_loop1:
-	add a0, zero, t4
-	call temps_to_stack
-	call get_gsa	
-	call stack_to_temps
-	add t2, zero, v0     ; the line
-	add t0, t0, zero      ; counter
-	addi t3, zero, N_GSA_COLUMNS	   ; max counter value
+	addi t4, zero, 0      ; x counter
+	addi a0, zero, 0      ; gsa line for set gsa
 	random_gsa_loop2:
-		ldw t1, RANDOM_NUM(zero)    ; random number
-		andi t1, t1, 1           	 ; random number mod 2
-		sll t1, t1, t0                ; shift left the 1 or 0 in LSB to x-coord value of counter
-		or t2, t2, t1				 ; or the mask with the line
-		addi t0, t0, 1				 ; i++
-		bne t0, t3, random_gsa_loop2	 ; while i != 12
-	add a0, zero, t2			    
-	add a1, zero, t4
-	call temps_to_stack
+		ldw t3, RANDOM_NUM(zero)    ; random number
+		andi t3, t3, 1           	 ; random number mod 2
+		sll t3, t3, t4                ; shift left the 1 or 0 in LSB to x-coord value of counter
+		or a0, a0, t3				 ; or the mask with the line
+		addi t4, t4, 1				 ; i++
+		bne t4, t6, random_gsa_loop2	 ; while i != 12			    
+	add a1, zero, t5
 	call set_gsa
-	call stack_to_temps
-	addi t4, t4, 1
-	bne t4, t5, random_gsa_loop1
+	addi t5, t5, 1
+	bne t5, t7, random_gsa_loop1
 
 	ldw ra, 0(sp)
 	addi sp, sp, 4
 	ret
-;	END:random_gsa
+; END:random_gsa
 
-; BEGIN: change_speed	
+; BEGIN:change_speed	
 change_speed:
 	ldw t0, SPEED(zero)
 	addi t1, zero, 0
@@ -250,17 +232,17 @@ change_speed:
 		maxSpeed:
 			stw t1, SPEED(zero)
 			ret
-; END: change_speed
+; END:change_speed
 
-; BEGIN: pause_game
+; BEGIN:pause_game
 pause_game:
 	ldw t0, PAUSE(zero)
 	xori t0, t0, 1
 	stw t0, PAUSE(zero)
 	ret
-; END: pause_game
+; END:pause_game
 
-; BEGIN: change_steps
+; BEGIN:change_steps
 change_steps:
 	ldw t0, CURR_STEP(zero)
 	addi t1, zero, 1
@@ -277,49 +259,53 @@ change_steps:
 		andi t0, t0, 0xFFF
 		stw t0, CURR_STEP(zero)
 		ret
-; END: change_steps
+; END:change_steps
 
-; BEGIN: increment seed
+; BEGIN:increment seed
 increment_seed: 
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	ldw t0, CURR_STATE(zero)
-	ldw t3, SEED(zero)  ; current Seed
-	addi t1, zero, INIT
-	addi t2, zero, RAND
-	beq t0, t2, incr_seed_rand_state
-	beq t0, t1, incr_seed_init_state
+	ldw t7, CURR_STATE(zero)
+	ldw t6, SEED(zero)  ; current Seed
+	addi t4, zero, INIT
+	addi t5, zero, RAND
+	beq t7, t5, incr_seed_rand_state
+	beq t7, t4, incr_seed_init_state
 	incr_seed_init_state:
-		addi t1, zero, 3
-		beq t3, t1, seed_3_or_4_or_rand ; if seed == 3 and state == init
-		addi t1, zero, 4
-		beq t3, t1, seed_3_or_4_or_rand ; if seed == 4 and state == init
+		addi t7, zero, 3
+		beq t6, t7, seed_3_or_4_or_rand ; if seed == 3 and state == init
+		addi t7, zero, 4
+		beq t6, t7, seed_3_or_4_or_rand ; if seed == 4 and state == init
 		
-		addi t3, t3, 1      ; seed + 1
-		stw t3, SEED(zero)  ; store new seed
-		slli t3, t3 , 2     ; n-th seed : n*4
-		addi a0, t3, SEEDS
-		ldw a0, 0(a0)
-		call temps_to_stack
-		call load_seed_in_gsa
-		call stack_to_temps
-		br incrSeedEnd
+		addi t6, t6, 1      ; seed + 1
+		stw t6, SEED(zero)  ; store new seed
+		slli t6, t6 , 2     ; n-th seed : n*4
+		addi a1, zero, 0   ; line counter
+		addi t7, zero, N_GSA_LINES  ; max lines
+		ldw t6, SEEDS(t6)
+		setNewGsa:
+			ldw a0, 0(t6)  ; address of new seed
+			call set_gsa
+			addi t6, t6, 4
+			addi a1, a1, 1
+			bne a1, t7, setNewGsa
+			br incrSeedEnd
 	seed_3_or_4_or_rand:
-		addi t1, zero, 4
-		stw t1, SEED(zero)
+		addi t7, zero, 4
+		stw t7, SEED(zero)
 		call random_gsa
 		br incrSeedEnd
 	incr_seed_rand_state:
-		addi t1, zero, 4
-		beq t3, t1, seed_3_or_4_or_rand
+		addi t7, zero, 4
+		beq t6, t7, seed_3_or_4_or_rand
 	incrSeedEnd:
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret
-; END: incremeent_seed
+; END:incremeent_seed
 
-; BEGIN: update_state
+; BEGIN:update_state
 update_state:
 	addi sp, sp, -4
 	stw ra, 0(sp)
@@ -348,9 +334,7 @@ update_state:
 	changeToInit:
 		addi t0, zero, INIT
 		stw t0, CURR_STATE(zero)
-		call temps_to_stack
 		call reset_game
-		call stack_to_temps
 		br updateEnd
 	changeToRand:
 		addi t0, zero, RAND
@@ -366,9 +350,9 @@ update_state:
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret
-;	END:update_state
+; END:update_state
 
-;	BEGIN:select_action
+; BEGIN:select_action
 select_action:
 		addi sp, sp, -4
 		stw ra, 0(sp)
@@ -390,9 +374,7 @@ select_action:
 			beq a0, t4, run_b4
 			br select_action_end
 			run_b0:
-				call temps_to_stack
 				call pause_game
-				call stack_to_temps
 				br select_action_end
 			run_b1:
 				addi a0, zero, 0
@@ -401,14 +383,10 @@ select_action:
 				addi a0, zero, 1
 				br run_change_speed
 			run_change_speed:
-				call temps_to_stack
 				call change_speed
-				call stack_to_temps
 				br select_action_end
 			run_b4:
-				call temps_to_stack
 				call random_gsa
-				call stack_to_temps
 				br select_action_end
 				
 		select_action_case_init:
@@ -420,14 +398,19 @@ select_action:
 
 			init_b0:
 				ldw t5, SEED(zero)
-				addi t5, t5, 1
-				addi t6, zero, N_SEEDS
+				addi t5, t5, 1          ; seed + 1
+				addi t6, zero, N_SEEDS  
 				beq t5, t6, select_action_end
-				stw t5, SEED(zero)
-				slli t5, t5, 2
-				addi a0, t5, SEEDS
-				ldw a0, 0(a0)
-				call load_seed_in_gsa
+				stw t5, SEED(zero)      ; store new seed
+				slli t5, t5, 2         ; n-th seed : n*4
+				ldw t5, SEEDS(t5)
+				addi a1, zero, 0       ; line counter
+				load_new_seed:
+					ldw a0, 0(t5)  ; address of new seed
+					call set_gsa
+					addi t5, t5, 4
+					addi a1, a1, 1
+					bne a1, t4, load_new_seed
 				br select_action_end
 			init_b2:
 				addi a2, zero, 1
@@ -462,38 +445,31 @@ select_action:
 			ldw ra, 0(sp)
 			addi sp, sp, 4
 			ret
-;	END:select_action
+; END:select_action
 
-;	BEGIN:cell_fate
+; BEGIN:cell_fate
 cell_fate:
-	addi t1, zero, 1
-	addi t2, zero, 2
-	addi t3, zero, 3
-	addi t4, zero, 4
-	beq a1, t1, living
-	br dead
-	living:
-		blt a0, t2, underpopulation
-		bge a0, t4, overpopulation
-		br stasis
-		underpopulation:
-			addi v0, zero, 0
-			ret
-		overpopulation:
-			addi v0, zero, 0
-			ret
-		stasis:
-			addi v0, zero, 1
-			ret
-	dead:
-		beq a0, t3, reproduction
+	addi t0, zero, 1
+	beq a1, t0, currently_living
+	currently_dead:
+		addi t0, zero, 3
+		beq a0, t0, next_alive
+		br next_dead
+	currently_living:
+		addi t0, zero, 2
+		blt a0, t0, next_dead
+		addi t0, zero, 4
+		bge a0, t0, next_dead
+		br next_alive
+	next_dead:
+		addi v0, zero, 0
 		ret
-		reproduction:
-			addi v0, zero, 1
-			ret
-;	END:cell_fate
+	next_alive:
+		addi v0, zero, 1
+		ret
+; END:cell_fate
 
-;	BEGIN:find_neighbours
+; BEGIN:find_neighbours
 find_neighbours:
 	addi sp, sp, -4
 	stw ra, 0(sp)
@@ -527,21 +503,27 @@ find_neighbours:
 		addi t2, t2, N_GSA_COLUMNS
 		br body_2_find_neighbours
 	body_2_find_neighbours:
+		addi sp, sp, 12
+		stw t0, 0(sp)
+		stw t1, 4(sp)
+		stw t2, 8(sp)
+
 		addi a0, t3, 0
-		call temps_to_stack
 		call get_gsa
-		call stack_to_temps
 		add t3, zero, v0
+
 		addi a0, t4, 0
-		call temps_to_stack
 		call get_gsa
-		call stack_to_temps
 		add t4, zero, v0
+
 		addi a0, t5, 0
-		call temps_to_stack
 		call get_gsa
-		call stack_to_temps
 		add t5, zero, v0
+
+		ldw t0, 0(sp)
+		ldw t1, 4(sp)
+		ldw t2, 8(sp)
+		addi sp, sp, 12
 
 		addi v0, zero, 0
 		addi t6, zero, 1
@@ -594,129 +576,97 @@ find_neighbours:
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret 
-;	END:find_neighbours
+; END:find_neighbours
 
-;	BEGIN:update_gsa
+; BEGIN:update_gsa
 update_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	ldw t0, PAUSE(zero)
-	addi t1, zero, PAUSED
-	beq t0, t1, update_gsa_ret
-	addi t1, zero, 0
-	addi t0, zero, 0
-	addi t6, zero, N_GSA_COLUMNS
-	addi t7, zero, N_GSA_LINES
-	addi t3, zero, 0
+	addi sp, sp, -12
+	stw s0, 0(sp)
+	stw s1, 4(sp)
+	stw s2, 8(sp)
+
+	ldw s0, PAUSE(zero)
+	addi s1, zero, PAUSED
+	beq s0, s1, update_gsa_ret
+	addi s1, zero, 0    ; y counter
+	addi s0, zero, 0    ; x counter
+	addi s6, zero, N_GSA_COLUMNS
+	addi s7, zero, N_GSA_LINES
+	addi s3, zero, 0
 	update_gsa_loop_y:
-	ldw t4, GSA_ID(zero)
-	addi a0, t1, 0
-	call temps_to_stack
-	call get_gsa
-	call stack_to_temps
-	addi t2, v0, 0
+	ldw s4, GSA_ID(zero)     ; current gsa
 		update_gsa_loop_x:
-		addi a0, t0, 0
-		addi a1, t1, 0
-		call temps_to_stack
+		addi a0, s0, 0
+		addi a1, s1, 0
 		call find_neighbours
-		call stack_to_temps
 		addi a0, v0, 0
 		addi a1, v1, 0
-		call temps_to_stack
 		call cell_fate
-		call stack_to_temps
-		addi t5, v0, 0
-		sll t5, t5, t0
-		or t3, t3, t5
-		addi t0, t0, 1
-		bne t0, t6, update_gsa_loop_x
-	addi a0, t3, 0
-	addi a1, t1, 0
-	xori t4, t4, 1
-	stw t4, GSA_ID(zero)
-	call temps_to_stack
+		addi s5, v0, 0    ; 1 or 0 if cell to live or die
+		sll s5, s5, s0    ; create mask 
+		or s3, s3, s5     ; or mask with new line being created
+		addi s0, s0, 1    ; x++
+		bne s0, s6, update_gsa_loop_x
+	addi a0, s3, 0        ; line to set in gsa
+	addi a1, s1, 0        ; y coord
+	xori s4, s4, 1        
+	stw s4, GSA_ID(zero)  ; next gsa
 	call set_gsa
-	call stack_to_temps
-	xori t4, t4, 1
-	stw t4, GSA_ID(zero)
-	addi t1, t1, 1
-	bne t1, t7, update_gsa_loop_y
-	xori t4, t4, 1
-	stw t4, GSA_ID(zero)
+	xori s4, s4, 1
+	stw s4, GSA_ID(zero)  ; current gsa
+	addi s1, s1, 1        ; y++
+	bne s1, s7, update_gsa_loop_y 
+	xori s4, s4, 1        ; current gsa = next gsa
+	stw s4, GSA_ID(zero)
 
 	update_gsa_ret:
+		ldw s0, 0(sp)
+		ldw s1, 4(sp)
+		ldw s2, 8(sp)
+		addi sp, sp, 12
+
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret
-;	END:update_gsa
+; END:update_gsa
 
-temps_to_stack:
-	addi sp, sp, -32
-	stw t0, 0(sp)
-	stw t1, 4(sp)
-	stw t2, 8(sp)
-	stw t3, 12(sp)
-	stw t4, 16(sp)
-	stw t5, 20(sp)
-	stw t6, 24(sp)
-	stw t7, 28(sp)
-	ret
-
-stack_to_temps:
-	ldw t0, 0(sp)
-	ldw t1, 4(sp)
-	ldw t2, 8(sp)
-	ldw t3, 12(sp)
-	ldw t4, 16(sp)
-	ldw t5, 20(sp)
-	ldw t6, 24(sp)
-	ldw t7, 28(sp)
-	addi sp, sp, 32
-	ret
-
-;	BEGIN:mask
+; BEGIN:mask
 mask:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	addi t0, zero, 3
 	addi t1, zero, 1
-	addi t2, zero, 2
-	addi t3, zero, 0
+	addi a1, zero, 0     ; y coord
 	addi t7, zero, N_GSA_LINES
 	ldw t4, CURR_STATE(zero)
 	bne t4, t1, mask_normal_state
 	mask_rand_state:
-		addi t6, zero, mask4
+		addi t6, zero, mask4  
 		br mask_use_mask
 	mask_normal_state:
 		ldw t5, SEED(zero)
 		slli t5, t5, 2
 		ldw t6, MASKS(t5)
 	mask_use_mask:
-		addi a0, t3, 0
-		call temps_to_stack
+		addi a0, a1, 0
 		call get_gsa
-		call stack_to_temps
 		addi a0, v0, 0
 		ldw t4, 0(t6)
 		and a0, a0, t4
-		addi a1, t3, 0
-		call temps_to_stack
 		call set_gsa
-		call stack_to_temps
-		addi t3, t3, 4
+		addi a1, a1, 1
 		addi t6, t6, 4   
-		bne t3, t7, mask_use_mask
+		bne a1, t7, mask_use_mask
 
 		ldw ra, 0(sp)
 		addi sp, sp, 4
 		ret
-;	END:mask
+; END:mask
 
-;	BEGIN:get_input
+; BEGIN:get_input
 get_input:
 	addi t0, zero, 0
 	ldw t1, BUTTONS+4(zero)
@@ -732,9 +682,9 @@ get_input:
 		addi v0, t3, 0
 		ldw zero, BUTTONS+4(zero)
 		ret
-;	END:get_input
+; END:get_input
 
-;	BEGIN:decrement_step
+; BEGIN:decrement_step
 decrement_step:
 	ldw t0, CURR_STATE(zero)
 	ldw t1, CURR_STEP(zero)
@@ -767,9 +717,9 @@ decrement_step:
 		stw t5, SEVEN_SEGS+8(zero)
 		stw t6, SEVEN_SEGS+12(zero)
 		ret
-;	END:decrement_step
+; END:decrement_step
 
-;	BEGIN:reset_game
+; BEGIN:reset_game
 reset_game:
 	addi sp, sp, -4
 	stw ra, 0(sp)
@@ -790,40 +740,30 @@ reset_game:
 	stw zero, PAUSE(zero)
 	stw t1, SPEED(zero)
 
-	addi a0, zero, seed0
-	call load_seed_in_gsa
+	addi t0, zero, 0
+	addi t1, zero, N_GSA_LINES
+	reset_loop:         ; load seed 0 in GSA 0
+	slli t3, t0, 2
+	ldw t2, seed0(t3)
+	add a0, t2, zero
+	add a1, t0, zero
+	addi sp, sp, -12
+	stw t0, 0(sp)
+	stw t1, 4(sp)
+	stw t2, 8(sp)
+	call set_gsa
+	ldw t0, 0(sp)
+	ldw t1, 4(sp)
+	ldw t2, 8(sp)
+	addi sp, sp, 12
+	addi t0, t0, 1
+	bne t0, t1, reset_loop
 
 	ldw ra, 0(sp)
 	addi sp, sp, 4
 	ret				
-;	END:reset_game
-
-load_seed_in_gsa:   ; a0 = SEED[n]
-	addi sp, sp, -4
-	stw ra, 0(sp)
-
-	addi t0, zero, 0
-	addi t1, zero, N_GSA_LINES
-	addi t3, a0, 0
-
-	load_seed_loop:
-	ldw t2, 0(t3)
-	add a0, t2, zero
-	add a1, t0, zero
-	call temps_to_stack
-	call set_gsa
-	call stack_to_temps
-	addi t3, t3, 4
-	addi t0, t0, 1
-	bne t0, t1, load_seed_loop
-
-	ldw ra, 0(sp)
-	addi sp, sp, 4
-	ret
-
-
-
-							
+; END:reset_game
+						
 font_data:
     .word 0xFC ; 0
     .word 0x60 ; 1
