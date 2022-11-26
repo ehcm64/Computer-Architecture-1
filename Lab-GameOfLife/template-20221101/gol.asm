@@ -40,6 +40,7 @@ main:
 	while:
 		addi a0, s0, 0
 		call select_action
+		addi a0, s0, 0
 		call update_state
 		call update_gsa
 		call mask
@@ -152,6 +153,8 @@ draw_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
+	call clear_leds
+	
 	addi t1, zero, 0
 	addi t7, zero, N_GSA_LINES
 	addi t6, zero, N_GSA_COLUMNS
@@ -162,11 +165,12 @@ draw_gsa:
 		call get_gsa
 		call stack_to_temps
 		addi t0, zero, 0
+		addi t4, v0, 0
 
 		draw_gsa_x_loop:
 			addi t2, zero, 1
 			sll t2, t2, t0
-			and t2, t2, v0
+			and t2, t2, t4
 			bne t2, zero, draw_pixel
 			br end_x_loop
 			draw_pixel:
@@ -296,6 +300,7 @@ increment_seed:
 		stw t3, SEED(zero)  ; store new seed
 		slli t3, t3 , 2     ; n-th seed : n*4
 		addi a0, t3, SEEDS
+		ldw a0, 0(a0)
 		call temps_to_stack
 		call load_seed_in_gsa
 		call stack_to_temps
@@ -354,6 +359,8 @@ update_state:
 	changeToRun:
 		addi t0, zero, RUN
 		stw t0, CURR_STATE(zero)
+		addi t0, zero, RUNNING
+		stw t0, PAUSE(zero)
 		br updateEnd
 	updateEnd:
 		ldw ra, 0(sp)
@@ -381,6 +388,7 @@ select_action:
 			beq a0, t1, run_b1
 			beq a0, t2, run_b2
 			beq a0, t4, run_b4
+			br select_action_end
 			run_b0:
 				call temps_to_stack
 				call pause_game
@@ -408,6 +416,7 @@ select_action:
 			beq a0, t2, init_b2
 			beq a0, t3, init_b3
 			beq a0, t4, init_b4
+			br select_action_end
 
 			init_b0:
 				ldw t5, SEED(zero)
@@ -417,6 +426,7 @@ select_action:
 				stw t5, SEED(zero)
 				slli t5, t5, 2
 				addi a0, t5, SEEDS
+				ldw a0, 0(a0)
 				call load_seed_in_gsa
 				br select_action_end
 			init_b2:
@@ -443,6 +453,7 @@ select_action:
 			beq a0, t2, init_b2
 			beq a0, t3, init_b3
 			beq a0, t4, init_b4
+			br select_action_end
 
 			rand_b0:
 				call random_gsa
@@ -771,6 +782,7 @@ reset_game:
 	stw t0, SEVEN_SEGS+4(zero)
 	stw t0, SEVEN_SEGS+8(zero)
 	stw t2, SEVEN_SEGS+12(zero)
+
 	stw zero, SEED(zero)
 	stw zero, CURR_STATE(zero)
 	stw t1, CURR_STEP(zero)
