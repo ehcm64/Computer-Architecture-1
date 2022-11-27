@@ -52,7 +52,6 @@ main:
 		bne s1, s2, while
 ; END:main
 
-
 ; BEGIN:clear_leds
 clear_leds:
     stw zero, LEDS(zero)
@@ -156,7 +155,15 @@ draw_gsa:
 
 	draw_gsa_y_loop:
 		addi a0, t5, 0
+		addi sp, sp, -12
+		stw t5, 0(sp)
+		stw t6, 4(sp)
+		stw t7, 8(sp)
 		call get_gsa        ;gsa line in v0
+		ldw t5, 0(sp)
+		ldw t6, 4(sp)
+		ldw t7, 8(sp)
+		addi sp, sp, 12
 		addi t4, zero, 0    ;x counter
 		draw_gsa_x_loop:
 			addi t3, zero, 1    ; 1 for mask
@@ -167,14 +174,19 @@ draw_gsa:
 			draw_pixel:
 				addi a0, t4, 0  ;x
 				addi a1, t5, 0  ;y
-
-				addi sp, sp, -8
+				addi sp, sp, -20
 				stw t3, 0(sp)
 				stw t4, 4(sp)
+				stw t5, 8(sp)
+				stw t6, 12(sp)
+				stw t7, 16(sp)
 				call set_pixel
 				ldw t3, 0(sp)
 				ldw t4, 4(sp)
-				addi sp, sp, 8
+				ldw t5, 8(sp)
+				ldw t6, 12(sp)
+				ldw t7, 16(sp)
+				addi sp, sp, 20
 			end_x_loop:
 			addi t4, t4, 1      ; x++
 			bne t4, t6, draw_gsa_x_loop
@@ -191,11 +203,9 @@ random_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	addi t7, zero, N_GSA_LINES
-	addi t6, zero, N_GSA_COLUMNS	  
-
 	addi t5, zero, 0 ; y counter
 	random_gsa_loop1:
+	addi t6, zero, N_GSA_COLUMNS	
 	addi t4, zero, 0      ; x counter
 	addi a0, zero, 0      ; gsa line for set gsa
 	random_gsa_loop2:
@@ -206,8 +216,15 @@ random_gsa:
 		addi t4, t4, 1				 ; i++
 		bne t4, t6, random_gsa_loop2	 ; while i != 12			    
 	add a1, zero, t5
+
+	addi sp, sp, -4
+	stw t5, 0(sp)
 	call set_gsa
+	ldw t5, 0(sp)
+	addi sp, sp, 4
+
 	addi t5, t5, 1
+	addi t7, zero, N_GSA_LINES
 	bne t5, t7, random_gsa_loop1
 
 	ldw ra, 0(sp)
@@ -288,15 +305,24 @@ increment_seed:
 		addi t6, t6, 1      ; seed + 1
 		stw t6, SEED(zero)  ; store new seed
 		slli t6, t6 , 2     ; n-th seed : n*4
-		addi a1, zero, 0   ; line counter
+		addi t5, zero, 0   ; line counter
 		addi t7, zero, N_GSA_LINES  ; max lines
 		ldw t6, SEEDS(t6)
 		setNewGsa:
 			ldw a0, 0(t6)  ; address of new seed
+			addi a1, t5, 0
+			addi sp, sp, -12
+			stw t5, 0(sp)
+			stw t6, 4(sp)
+			stw t7, 8(sp)
 			call set_gsa
+			ldw t5, 0(sp)
+			ldw t6, 4(sp)
+			ldw t7, 8(sp)
+			addi sp, sp, 12
 			addi t6, t6, 4
-			addi a1, a1, 1
-			bne a1, t7, setNewGsa
+			addi t5, t5, 1
+			bne t5, t7, setNewGsa
 			br incrSeedEnd
 	seed_3_or_4_or_rand:
 		addi t7, zero, 4
@@ -490,27 +516,37 @@ find_neighbours:
 		addi t2, t2, N_GSA_COLUMNS
 		br body_2_find_neighbours
 	body_2_find_neighbours:
-		addi sp, sp, -12
+		addi sp, sp, -32
 		stw t0, 0(sp)
 		stw t1, 4(sp)
 		stw t2, 8(sp)
+		stw t3, 12(sp)
+		stw t4, 16(sp)
+		stw t5, 20(sp)
+		stw t6, 24(sp)
+		stw t7, 28(sp)
 
 		addi a0, t3, 0
 		call get_gsa
-		add t3, zero, v0
+		stw v0, 12(sp)
 
-		addi a0, t4, 0
+		ldw a0, 16(sp)
 		call get_gsa
-		add t4, zero, v0
+		stw v0, 16(sp)
 
-		addi a0, t5, 0
+		ldw a0, 20(sp)
 		call get_gsa
-		add t5, zero, v0
+		stw v0, 20(sp)
 
 		ldw t0, 0(sp)
 		ldw t1, 4(sp)
 		ldw t2, 8(sp)
-		addi sp, sp, 12
+		ldw t3, 12(sp)
+		ldw t4, 16(sp)
+		ldw t5, 20(sp)
+		ldw t6, 24(sp)
+		ldw t7, 28(sp)
+		addi sp, sp, 32
 
 		addi v0, zero, 0
 		addi t6, zero, 1
@@ -570,10 +606,15 @@ update_gsa:
 	addi sp, sp, -4
 	stw ra, 0(sp)
 
-	addi sp, sp, -12
+	addi sp, sp, -32
 	stw s0, 0(sp)
 	stw s1, 4(sp)
 	stw s2, 8(sp)
+	stw s3, 12(sp)
+	stw s4, 16(sp)
+	stw s5, 20(sp)
+	stw s6, 24(sp)
+	stw s7, 28(sp)
 
 	ldw s0, PAUSE(zero)
 	addi s1, zero, PAUSED
@@ -614,7 +655,12 @@ update_gsa:
 		ldw s0, 0(sp)
 		ldw s1, 4(sp)
 		ldw s2, 8(sp)
-		addi sp, sp, 12
+		ldw s3, 12(sp)
+		ldw s4, 16(sp)
+		ldw s5, 20(sp)
+		ldw s6, 24(sp)
+		ldw s7, 28(sp)
+		addi sp, sp, 32
 
 		ldw ra, 0(sp)
 		addi sp, sp, 4
@@ -628,26 +674,39 @@ mask:
 
 	addi t1, zero, 1
 	addi a1, zero, 0     ; y coord
-	addi t7, zero, N_GSA_LINES
 	ldw t4, CURR_STATE(zero)
 	bne t4, t1, mask_normal_state
 	mask_rand_state:
 		addi t6, zero, mask4  
+		addi t0, zero, 0
 		br mask_use_mask
 	mask_normal_state:
 		ldw t5, SEED(zero)
 		slli t5, t5, 2
 		ldw t6, MASKS(t5)
+		addi t0, zero, 0
 	mask_use_mask:
-		addi a0, a1, 0
+		addi a0, t0, 0
+		addi sp, sp, -8
+		stw t0, 0(sp)
+		stw t6, 4(sp)
 		call get_gsa
+		ldw t0, 0(sp)
+		ldw t6, 4(sp)
 		addi a0, v0, 0
 		ldw t4, 0(t6)
 		and a0, a0, t4
+		addi a1, t0, 0
+		stw t0, 0(sp)
+		stw t6, 4(sp)
 		call set_gsa
-		addi a1, a1, 1
+		ldw t0, 0(sp)
+		ldw t6, 4(sp)
+		addi sp, sp, 8
+		addi t0, t0, 1
 		addi t6, t6, 4   
-		bne a1, t7, mask_use_mask
+		addi t7, zero, N_GSA_LINES
+		bne t0, t7, mask_use_mask
 
 		ldw ra, 0(sp)
 		addi sp, sp, 4
@@ -735,15 +794,27 @@ reset_game:
 	ldw t2, seed0(t3)
 	add a0, t2, zero
 	add a1, t0, zero
-	addi sp, sp, -12
+	addi sp, sp, -32
 	stw t0, 0(sp)
 	stw t1, 4(sp)
 	stw t2, 8(sp)
+	stw t3, 12(sp)
+	stw t4, 16(sp)
+	stw t5, 20(sp)
+	stw t6, 24(sp)
+	stw t7, 28(sp)
+	
 	call set_gsa
+
 	ldw t0, 0(sp)
 	ldw t1, 4(sp)
 	ldw t2, 8(sp)
-	addi sp, sp, 12
+	ldw t3, 12(sp)
+	ldw t4, 16(sp)
+	ldw t5, 20(sp)
+	ldw t6, 24(sp)
+	ldw t7, 28(sp)
+	addi sp, sp, 32
 	addi t0, t0, 1
 	bne t0, t1, reset_loop
 
