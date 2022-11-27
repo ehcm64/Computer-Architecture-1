@@ -50,6 +50,7 @@ main:
 		call get_input
 		addi s0, v0, 0
 		bne s1, s2, while
+	br main
 ; END:main
 
 ; BEGIN:clear_leds
@@ -740,6 +741,8 @@ decrement_step:
 	beq t0, t2, decrement_step_case_run
 	br display_steps
 	decrement_step_case_run:
+		ldw t7, PAUSE(zero)
+		beq t7, zero, display_steps
 		bne t1, zero, decrement_and_ret0
 		addi v0, zero, 1
 		ret
