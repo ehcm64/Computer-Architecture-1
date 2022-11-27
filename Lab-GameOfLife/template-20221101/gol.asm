@@ -94,9 +94,10 @@ wait:
 	
 	add t3, zero, zero
 	wait1:
+		ldw t4, SPEED(zero)
+		add t3, t3, t4
 		cmpge t0, t3, t2
-		addi t3, t3, SPEED
-		bne t0 ,t1, wait1 
+		bne t0, t1, wait1 
 		ret
 ; END:wait
 
@@ -744,6 +745,7 @@ decrement_step:
 		ret
 		decrement_and_ret0:
 			addi t1, t1, -1
+			stw t1, CURR_STEP(zero)
 			br display_steps
 	display_steps:
 		addi v0, zero, 0
@@ -757,7 +759,7 @@ decrement_step:
 		srli t5, t5, 2
 		ldw t5, font_data(t5)
 		andi t6, t1, 0x0000000F
-		srli t6, t6, 2
+		slli t6, t6, 2
 		ldw t6, font_data(t6)
 		stw t3, SEVEN_SEGS(zero)
 		stw t4, SEVEN_SEGS+4(zero)
