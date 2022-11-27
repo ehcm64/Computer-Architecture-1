@@ -91,7 +91,10 @@ set_pixel:
 wait: 
 	addi t1, zero, 1
 	addi t2, zero, 1 ; 
-	slli t2, t2, 19     ;2^19
+	slli t2, t2, 21   ;2^22
+	addi t3, zero, 1
+	slli t3, t3, 20
+	add t2, t2, t3
 	
 	add t3, zero, zero
 	wait1:
