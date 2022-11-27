@@ -826,6 +826,8 @@ reset_game:
 	addi t0, t0, 1
 	bne t0, t1, reset_loop
 
+	call draw_gsa
+
 	ldw ra, 0(sp)
 	addi sp, sp, 4
 	ret				
